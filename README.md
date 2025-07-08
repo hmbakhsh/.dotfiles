@@ -10,6 +10,7 @@ git clone https://github.com/hmbakhsh/.dotfiles.git
 ```bash
 ln -s ~/.dotfiles/vscode/settings.json ~/Library/Application Support/Code/User/settings.json
 ln -s ~/.dotfiles/zsh/.zshrc ~/.zshrc
+brew bundle --file=~/.dotfiles/brew/Brewfile
 ```
 ---
 ### FAQ
