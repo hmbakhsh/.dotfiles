@@ -1,12 +1,24 @@
 # hmbakhsh's .dotfiles
 
-How to symlink to a directory
+## Getting started
+### Clone repo in ~/ directory
 ```bash
-ln -sf path/to/dotfile/ where/the/file/needs/to/be/stored
+git clone https://github.com/hmbakhsh/.dotfiles.git
 ```
 
-How to store all currently installed formulae & casks
+### Copy-paste commands
+```bash
+ln -s ~/.dotfiles/vscode/settings.json ~/Library/Application Support/Code/User/settings.json
+ln -s ~/.dotfiles/zsh/.zshrc ~/.zshrc
+```
+---
+## FAQ
+### How to symlink to a directory
+```bash
+ln -s path/to/dotfile/ where/the/file/needs/to/be/stored
+```
+
+### How to store all currently installed formulae & casks
 ```bash
 brew bundle dump --file=~/Brewfile --force
 ```
-
