@@ -1,0 +1,165 @@
+
+r.fontSize": 16,
+  "terminal.integrated.fontSize": 11,
+  "window.commandCenter": false,
+  "editor.lineNumbers": "relative",
+  "workbench.sideBar.location": "right",
+  "workbench.panel.defaultLocation": "left",
+  "workbench.tree.indent": 14,
+  "workbench.tree.renderIndentGuides": "always",
+  "editor.fontFamily": "\"JetBrains Mono\", Menlo, Monaco, 'Courier New', monospace",
+  "editor.cursorBlinking": "solid",
+  "files.exclude": {
+    "**/__init__.py": true
+  },
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUnboundVariable": "none",
+    "reportImplicitStringConcatenation": "none",
+    "reportMissingParameterType": "none",
+    "reportMissingTypeStubs": "none",
+    "reportUnusedImport": "none",
+    "reportUnusedVariable": "none",
+    "reportUnusedFunction": "none",
+    "reportUnusedClass": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalSubscript": "none",
+    "reportOptionalCall": "none",
+    "reportOptionalIterable": "none",
+    "reportOptionalContextManager": "none",
+    "reportPrivateImportUsage": "none"
+  },
+  "workbench.colorTheme": "poimandres-noitalics",
+  "explorer.excludeGitIgnore": true,
+  "files.associations": {
+    ".env*": "dotenv"
+  },
+  "dotenv.enableAutocloaking": false,
+  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor,.next}/**/*",
+  "explorer.confirmDelete": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "workbench.startupEditor": "none",
+
+  // Copied from https://www.benja.dev/writing/vscode-setup
+  // Better defaults
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.lightbulb.enabled": "off",
+  "editor.smoothScrolling": true,
+  "editor.cursorSmoothCaretAnimation": "on", // most asked
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.wordWrap": "on",
+  "editor.wrappingStrategy": "advanced",
+  "editor.tabSize": 2,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "files.insertFinalNewline": true,
+  "git.enableCommitSigning": true, // always sign your commits
+
+  // Reduced noise
+  "editor.hover.enabled": true,
+  "workbench.tips.enabled": false,
+  "git.decorations.enabled": false,
+  "explorer.decorations.colors": true,
+  "explorer.decorations.badges": false,
+  "editor.renderLineHighlight": "none",
+  // "editor.occurrencesHighlight": "off",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+
+  // Improved search
+  "search.useIgnoreFiles": false,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**debug": true,
+    "**/package-lock.json": true,
+    "**/.next": true,
+    "**/data": true,
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/__init__.py": true,
+  },
+
+  // Code
+  "editor.lineHeight": 1.7,
+  "editor.fontLigatures": true,
+
+  // Suggestions
+  "editor.suggestFontSize": 12,
+  "editor.suggestLineHeight": 25,
+  "workbench.iconTheme": "vscode-jetbrains-icon-theme-2023-dark",
+  "errorLens.enabled": true,
+  "errorLens.padding": "0",
+  "errorLens.gutterIconsEnabled": true,
+  "errorLens.removeLinebreaks": false,
+  "errorLens.scrollbarHackEnabled": true,
+  "errorLens.fontWeight": "600",
+  "errorLens.fontFamily": "JetBrains Mono",
+  "window.titleBarStyle": "custom",
+  "apc.electron": {
+    "titleBarStyle": "hiddenInset",
+    "titleBarOverlay": {
+      "color": "#292929",
+      "symbolColor": "#fff"
+    },
+    "trafficLightPosition": {
+      "x": 8,
+      "y": 9
+    }
+  },
+  "apc.header": {
+    "height": 34
+  },
+  "apc.parts.font.family": {
+    "sidebar": "JetBrains Mono"
+  },
+  "workbench.colorCustomizations": {
+    "[Fleet*]": {
+      "statusBar.border": "#292929",
+      "tab.inactiveBackground": "#292929",
+      "editorGroupHeader.border": "#292929",
+      "editorGroupHeader.tabsBackground": "#292929",
+      "editorLineNumber.foreground": "#5D5D5D",
+      "tab.inactiveForeground": "#D1D1D1",
+      "tab.activeForeground": "#fff",
+      "searchEditor.textInputBorder": "#fff",
+      "tab.activeBorderTop": "#fff",
+      // inlay hints
+      "editorInlayHint.foreground": "#5D5D5D",
+      "editorInlayHint.background": "#FFFFFF00",
+      // zsh auto suggestions
+      "terminal.ansiBrightBlack": "#5D5D5D"
+    }
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": []
+  },
+
+  // https://marketplace.visualstudio.com/items?itemName=hoovercj.vscode-settings-cycler
+  // Can't seem to find above extension in Cursor marketplace
+  "settings.cycle": [
+    {
+      "id": "explorer.excludeGitIgnore",
+      "values": [
+        {
+          "explorer.excludeGitIgnore": true
+        },
+        {
+          "explorer.excludeGitIgnore": false
+        }
+      ]
+    }
+  ]
+}
+
