@@ -1,24 +1,24 @@
 # hmbakhsh's .dotfiles
 
-## Getting started
-### Clone repo in ~/ directory
+### Getting started
+#### Clone repo in ~/ directory
 ```bash
 git clone https://github.com/hmbakhsh/.dotfiles.git
 ```
 
-### Copy-paste commands
+#### Copy-paste commands
 ```bash
 ln -s ~/.dotfiles/vscode/settings.json ~/Library/Application Support/Code/User/settings.json
 ln -s ~/.dotfiles/zsh/.zshrc ~/.zshrc
 ```
 ---
-## FAQ
-### How to symlink to a directory
+### FAQ
+#### How to symlink to a directory
 ```bash
 ln -s path/to/dotfile/ where/the/file/needs/to/be/stored
 ```
 
-### How to store all currently installed formulae & casks
+#### How to store all currently installed formulae & casks
 ```bash
 brew bundle dump --file=~/Brewfile --force
 ```
