@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: copyfile /path/to/file" >&2
+  exit 1
+fi
+
+path="$1"
+abs="$(cd "$(dirname "$path")" && pwd)/$(basename "$path")"
+
+cmd=(osascript -e "set the clipboard to (POSIX file \"${abs}\")")
+
+# If inside tmux, run via reattach-to-user-namespace
+if [[ -n "${TMUX:-}" ]]; then
+  cmd=(reattach-to-user-namespace "${cmd[@]}")
+fi
+
+exec "${cmd[@]}"
+
