@@ -1,5 +1,5 @@
-
-r.fontSize": 16,
+{
+  "editor.fontSize": 16,
   "terminal.integrated.fontSize": 11,
   "window.commandCenter": false,
   "editor.lineNumbers": "relative",
@@ -48,7 +48,6 @@ r.fontSize": 16,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "workbench.startupEditor": "none",
-
   // Copied from https://www.benja.dev/writing/vscode-setup
   // Better defaults
   "editor.copyWithSyntaxHighlighting": false,
@@ -62,7 +61,6 @@ r.fontSize": 16,
   "diffEditor.ignoreTrimWhitespace": false,
   "files.insertFinalNewline": true,
   "git.enableCommitSigning": true, // always sign your commits
-
   // Reduced noise
   "editor.hover.enabled": true,
   "workbench.tips.enabled": false,
@@ -76,7 +74,6 @@ r.fontSize": 16,
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleImplementations": "goto",
   "editor.gotoLocation.multipleTypeDefinitions": "goto",
-
   // Improved search
   "search.useIgnoreFiles": false,
   "search.exclude": {
@@ -90,11 +87,9 @@ r.fontSize": 16,
     "**/__pycache__": true,
     "**/__init__.py": true,
   },
-
   // Code
   "editor.lineHeight": 1.7,
   "editor.fontLigatures": true,
-
   // Suggestions
   "editor.suggestFontSize": 12,
   "editor.suggestLineHeight": 25,
@@ -145,7 +140,6 @@ r.fontSize": 16,
   "editor.tokenColorCustomizations": {
     "textMateRules": []
   },
-
   // https://marketplace.visualstudio.com/items?itemName=hoovercj.vscode-settings-cycler
   // Can't seem to find above extension in Cursor marketplace
   "settings.cycle": [
@@ -162,4 +156,3 @@ r.fontSize": 16,
     }
   ]
 }
-
