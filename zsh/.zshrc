@@ -135,7 +135,7 @@ alias devd="./scripts/devd.sh"
 
 # Set up fzf key bindings and fuzzy completion
 #source <(fzf --zsh)
-#eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
 
 # macOS specific configurations
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -166,10 +166,6 @@ alias cc="cursor ."
 alias py="python3"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
-alias dev="cd ~/Desktop/hb/dev"
-alias prism="cd ~/Desktop/hb/prism/code"
-alias gio="cd ~/Desktop/gio/"
-alias z="zed ."
 
 alias av="source .venv/bin/activate"
 alias dv="deactivate"
@@ -241,3 +237,4 @@ zinit light-mode for \
 [ -s "/Users/hbak/.bun/_bun" ] && source "/Users/hbak/.bun/_bun"
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="$HOME/.dotnet/tools:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
