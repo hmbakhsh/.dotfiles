@@ -1,3 +1,4 @@
+source <(fzf --zsh)
 export PATH="/Users/hbak/.bun/bin:$PATH"
 
 # Cursor compatibility fix - disable complex shell features when in Cursor
@@ -6,6 +7,10 @@ if [[ "$TERM_PROGRAM" == "cursor" ]] || [[ -n "$CURSOR_SESSION" ]] || [[ "$TERMI
     export PS1='$ '
     return
 fi
+
+
+# colors for ls/lsd/etc
+export LS_COLORS="di=38;5;147:ln=38;5;117:or=38;5;204:pi=38;5;141:so=38;5;141:bd=38;5;111:cd=38;5;111:ex=38;5;211:*.tar=38;5;141:*.tgz=38;5;141:*.zip=38;5;141:*.jpg=38;5;117:*.jpeg=38;5;117:*.png=38;5;117:*.gif=38;5;117:*.mp4=38;5;111:*.mkv=38;5;111:*.mp3=38;5;75:*.flac=38;5;75:*.pdf=38;5;188:*.txt=38;5;188:*.md=38;5;188:*.py=38;5;71:*.js=38;5;71:*.ts=38;5;71:*.rs=38;5;71:*.go=38;5;71:*.json=38;5;204:*.yaml=38;5;204:*.yml=38;5;204:*.toml=38;5;204"
 
 # enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -49,6 +54,16 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
+# prevent window title renaming (must come after snippets)
+DISABLE_AUTO_TITLE="true"
+
+# disable zsh/oh-my-zsh auto title updates if present (quietly)
+{ unsetopt AUTO_TITLE } 2>/dev/null
+
+# wipe any title-setting hooks added by plugins
+precmd() { :; }
+
+
 # Load completions
 autoload -Uz compinit && compinit
 
@@ -86,12 +101,14 @@ zstyle ':completion:*' show-completer false
 # Theme configuration - Simple custom prompt
 # ZSH_THEME="robbyrussell"
 
-# Custom compact prompt with colors and git info
 autoload -Uz vcs_info
+zstyle ':vcs_info:git:*' formats '%F{244}%b%f'
 precmd() { vcs_info }
-zstyle ':vcs_info:git:*' formats ' %F{red}%b%f'
+
 setopt PROMPT_SUBST
-PROMPT='%F{blue}%1~%f${vcs_info_msg_0_} %F{cyan}❯%f '
+
+# oxocarbon-style minimalist prompt (no icon, no extra space)
+PROMPT='%F{111}%1~%f${vcs_info_msg_0_:+ ${vcs_info_msg_0_}} %F{60}>%f '
 
 # Set to superior editing mode
 export VISUAL=nvim
@@ -148,14 +165,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # Custom cd function - disabled for Cursor compatibility
-cd() {
-    builtin cd "$@"
-    # Only run fancy output in interactive terminals, not in Cursor
-    if [ $? -eq 0 ] && [[ -t 1 ]] && [[ "$TERM_PROGRAM" != "cursor" ]] && [[ -z "$CURSOR_SESSION" ]]; then
-        clear
-        lsd -l --group-directories-first --blocks size,date,name --date='+%d/%m/%y'
-    fi
-}
+# cd() {
+#     builtin cd "$@"
+#     # Only run fancy output in interactive terminals, not in Cursor
+#     if [ $? -eq 0 ] && [[ -t 1 ]] && [[ "$TERM_PROGRAM" != "cursor" ]] && [[ -z "$CURSOR_SESSION" ]]; then
+#         clear
+#         lsd -l --group-directories-first --blocks size,date,name --date='+%d/%m/%y'
+#     fi
+# }
 
 alias sc="clear"
 alias ls="lsd -l --group-directories-first --blocks size,date,name --date='+%d/%m/%y'"
@@ -173,6 +190,14 @@ alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {}
 alias njs="bun create next-app"
 alias scn="bunx --bun shadcn@latest init"
 
+z() {
+  if [[ $# -eq 0 ]]; then
+    builtin cd ~ || return
+  else
+    __zoxide_z "$@" || return
+  fi
+  ls
+}
 
 zp() {
 	realpath "$1" | pbcopy
