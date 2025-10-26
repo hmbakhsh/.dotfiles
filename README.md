@@ -8,9 +8,11 @@ git clone https://github.com/hmbakhsh/.dotfiles.git
 
 #### Copy-paste commands
 ```bash
-ln -s ~/.dotfiles/vscode/settings.json ~/Library/Application Support/Code/User/settings.json
+ln -s ~/.dotfiles/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
 ln -s ~/.dotfiles/zsh/.zshrc ~/.zshrc
-ln -s ~/.dotfiles/copyfile /opt/homebrew/bin/copyfile (dependency: brew install reattach-to-user-namespace)
+ln -s ~/.dotfiles/nvim ~/.config/nvim
+ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
+ln -s ~/.dotfiles/copyfile /opt/homebrew/bin/copyfile # dependency: brew install reattach-to-user-namespace
 brew bundle --file=~/.dotfiles/brew/Brewfile
 ```
 ---
@@ -24,4 +26,3 @@ ln -s path/to/dotfile/ where/the/file/needs/to/be/stored
 ```bash
 brew bundle dump --file=~/Brewfile --force
 ```
-
