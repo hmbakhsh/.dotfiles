@@ -162,7 +162,6 @@ alias ls="lsd -l --group-directories-first --blocks size,date,name --date='+%d/%
 # alias ls="lsd -l --blocks size,date,name"
 alias lsa="lsd -l -a"
 alias cc="cursor ."
-alias v='nvim .'
 
 alias gst='git status'
 alias gcm='git commit -m '
@@ -177,6 +176,14 @@ alias scn="bunx --bun shadcn@latest init"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
+
+v() {
+  if [ $# -eq 0 ]; then
+    nvim .
+  else
+    nvim "$@"
+  fi
+}
 
 z() {
   if [[ $# -eq 0 ]]; then
