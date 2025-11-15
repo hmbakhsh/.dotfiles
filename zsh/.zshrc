@@ -165,7 +165,7 @@ alias cc="cursor ."
 alias v='nvim .'
 
 alias gst='git status'
-alias gcm='git commit -m'
+alias gcm='git commit -m '
 
 alias py="python3"
 alias av="source .venv/bin/activate"
