@@ -2,18 +2,18 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
-      servers = {
-        -- Apply these keymaps to all LSP servers
-        ["*"] = {
-          keys = {
-            { "gd", vim.lsp.buf.definition, desc = "Go to Definition", has = "definition" },
-            { "gr", vim.lsp.buf.references, desc = "Go to References", has = "references" },
-            { "gI", vim.lsp.buf.implementation, desc = "Go to Implementation", has = "implementation" },
-            { "gy", vim.lsp.buf.type_definition, desc = "Go to Type Definition", has = "typeDefinition" },
-            { "K", vim.lsp.buf.hover, desc = "Hover Documentation", has = "hover" },
-          },
-        },
-      },
+      -- LazyVim already provides excellent default LSP keymaps with Telescope integration
+      -- If you want to customize keymaps, use Telescope's LSP functions for better UX:
+      -- servers = {
+      --   ["*"] = {
+      --     keys = {
+      --       { "gd", function() require("telescope.builtin").lsp_definitions() end, desc = "Go to Definition" },
+      --       { "gr", function() require("telescope.builtin").lsp_references() end, desc = "Go to References" },
+      --       { "gI", function() require("telescope.builtin").lsp_implementations() end, desc = "Go to Implementation" },
+      --       { "gy", function() require("telescope.builtin").lsp_type_definitions() end, desc = "Go to Type Definition" },
+      --     },
+      --   },
+      -- },
     },
   },
 }
