@@ -115,19 +115,6 @@ export VISUAL=nvim
 export EDITOR=nvim
 export TERM="tmux-256color"
 
-# Directories
-export DEV="$HOME/Desktop/hb/dev/"
-export DOT="$HOME/dotfiles/"
-export PRISM="$CODE/prism/"
-export ZSHCONFIG="$HOME/.zshrc"
-export DESKTOP="$HOME/Desktop"
-
-# Aliases for cd to Directories
-alias dev="cd $CODE"
-alias d="cd $DESKTOP"
-alias dot="cd $DOT"
-alias prism="cd $PRISM"
-alias zshconfig="nvim $ZSHCONFIG"
 
 # aliases
 alias c='clear'
@@ -145,10 +132,6 @@ alias l.='ls -dl .*'
 
 #fzf
 #alias fzf='fzf --preview="bat --color=always {} | head -500"'
-
-# prism scripts
-alias dev="./scripts/dev.sh"
-alias devd="./scripts/devd.sh"
 
 # Set up fzf key bindings and fuzzy completion
 #source <(fzf --zsh)
@@ -174,19 +157,19 @@ fi
 #     fi
 # }
 
-alias sc="clear"
 alias ls="lsd -l --group-directories-first --blocks size,date,name --date='+%d/%m/%y'"
 # This includes folders coming first in the ls
 # alias ls="lsd -l --blocks size,date,name"
 alias lsa="lsd -l -a"
 alias cc="cursor ."
+alias v='nvim .'
+alias gst='git status'
 alias py="python3"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
-
+alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
 alias av="source .venv/bin/activate"
 alias dv="deactivate"
-alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
 alias njs="bun create next-app"
 alias scn="bunx --bun shadcn@latest init"
 
