@@ -177,6 +177,7 @@ alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
 
+unalias v 2>/dev/null
 v() {
   if [ $# -eq 0 ]; then
     nvim .
