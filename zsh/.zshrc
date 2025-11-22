@@ -33,9 +33,6 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-# Add in Powerlevel10k
-# zinit ice depth=1; zinit light romkatv/powerlevel10k
-
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -176,6 +173,8 @@ alias scn="bunx --bun shadcn@latest init"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
+source /Users/hbak/Desktop/prism/code/frontend/scripts/new-worktree-function.sh
+alias cat="bat"
 
 unalias v 2>/dev/null
 v() {
@@ -259,3 +258,6 @@ zinit light-mode for \
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PATH="$HOME/.dotnet/tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Added by Antigravity
+export PATH="/Users/hbak/.antigravity/antigravity/bin:$PATH"
