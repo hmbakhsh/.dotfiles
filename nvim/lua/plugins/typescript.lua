@@ -116,44 +116,43 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 return {
-  -- Import LazyVim's TypeScript extras
-  { import = "lazyvim.plugins.extras.lang.typescript" },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = function()
+      return {
+        handlers = {
+          ["textDocument/definition"] = function(err, result, ctx, config)
+            local client = ctx and ctx.client_id and vim.lsp.get_client_by_id(ctx.client_id)
+            if should_filter_definition(client, ctx, result) then
+              local list, is_list = coerce_result_list(result)
+              list = filter_import_definitions(list)
+              if is_list then
+                result = list
+              else
+                result = list[1]
+              end
+            end
+            return vim.lsp.handlers["textDocument/definition"](err, result, ctx, config)
+          end,
+        },
+        -- Default options prioritize responsiveness in large projects while still
+        -- exposing useful code actions.
+        settings = {
+          separate_diagnostic_server = true,
+          publish_diagnostic_on = "insert_leave",
+          expose_as_code_action = "all",
+          complete_function_calls = true,
+        },
+      }
+    end,
+  },
 
   -- TypeScript error translator
   {
     "dmmulroy/ts-error-translator.nvim",
     config = function()
       require("ts-error-translator").setup()
-    end,
-  },
-
-  -- Prefer source definitions so gd jumps to the implementation file
-  {
-    "neovim/nvim-lspconfig",
-    opts = function(_, opts)
-      opts.servers = opts.servers or {}
-      opts.servers.vtsls = opts.servers.vtsls or {}
-      local settings = opts.servers.vtsls.settings or {}
-      opts.servers.vtsls.settings = vim.tbl_deep_extend("force", settings, {
-        typescript = { preferGoToSourceDefinition = true },
-        javascript = { preferGoToSourceDefinition = true },
-      })
-
-      local orig = opts.handlers and opts.handlers["textDocument/definition"] or vim.lsp.handlers["textDocument/definition"]
-      opts.handlers = opts.handlers or {}
-      opts.handlers["textDocument/definition"] = function(err, result, ctx, config)
-        local client = ctx and ctx.client_id and vim.lsp.get_client_by_id(ctx.client_id)
-        if should_filter_definition(client, ctx, result) then
-          local list, is_list = coerce_result_list(result)
-          list = filter_import_definitions(list)
-          if is_list then
-            result = list
-          else
-            result = list[1]
-          end
-        end
-        return orig(err, result, ctx, config)
-      end
     end,
   },
 }

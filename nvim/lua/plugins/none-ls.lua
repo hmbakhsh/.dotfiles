@@ -8,6 +8,16 @@ local eslint_filetypes = {
   "typescriptreact",
 }
 
+local eslint_config_files = {
+  ".eslintrc",
+  ".eslintrc.js",
+  ".eslintrc.cjs",
+  ".eslintrc.json",
+  "eslint.config.js",
+  "eslint.config.mjs",
+  "eslint.config.cjs",
+}
+
 local function is_eslint_ft(bufnr)
   return vim.tbl_contains(eslint_filetypes, vim.bo[bufnr].filetype)
 end
@@ -78,9 +88,15 @@ return {
       -- extras sources
       local eslint_diag = require("none-ls.diagnostics.eslint_d").with({
         filetypes = eslint_filetypes,
+        condition = function(utils)
+          return utils.root_has_file(eslint_config_files)
+        end,
       })
       local eslint_actions = require("none-ls.code_actions.eslint_d").with({
         filetypes = eslint_filetypes,
+        condition = function(utils)
+          return utils.root_has_file(eslint_config_files)
+        end,
       })
       -- if you ever want eslint_d formatting too, uncomment:
       -- local eslint_fmt = require("none-ls.formatting.eslint_d").with({
