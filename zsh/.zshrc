@@ -175,6 +175,7 @@ alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
 source /Users/hbak/Desktop/prism/code/frontend/scripts/new-worktree-function.sh
 alias cat="bat"
+alias rm="echo 'Use trash-cli instead. Usage: trash'"
 
 unalias v 2>/dev/null
 v() {
@@ -261,3 +262,4 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Added by Antigravity
 export PATH="/Users/hbak/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
