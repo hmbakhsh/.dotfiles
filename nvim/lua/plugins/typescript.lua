@@ -88,6 +88,17 @@ local function goto_ts_definition()
     if err or not result or (vim.tbl_islist(result) and vim.tbl_isempty(result)) then
       return fallback()
     end
+
+    if should_filter_definition(client, ctx, result) then
+      local list, is_list = coerce_result_list(result)
+      list = filter_import_definitions(list)
+      if is_list then
+        result = list
+      else
+        result = list[1]
+      end
+    end
+
     if handler then
       return handler(err, result, ctx, config)
     else

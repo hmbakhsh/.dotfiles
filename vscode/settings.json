@@ -37,7 +37,7 @@
     "reportOptionalContextManager": "none",
     "reportPrivateImportUsage": "none"
   },
-  "workbench.colorTheme": "poimandres-noitalics",
+  "workbench.colorTheme": "Solarized Light",
   "explorer.excludeGitIgnore": true,
   "files.associations": {
     ".env*": "dotenv"
@@ -85,7 +85,7 @@
     "**/data": true,
     "**/.venv": true,
     "**/__pycache__": true,
-    "**/__init__.py": true,
+    "**/__init__.py": true
   },
   // Code
   "editor.lineHeight": 1.7,
@@ -154,5 +154,6 @@
         }
       ]
     }
-  ]
+  ],
+  "editor.accessibilitySupport": "off"
 }
