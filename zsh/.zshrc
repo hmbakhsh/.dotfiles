@@ -173,7 +173,7 @@ alias scn="bunx --bun shadcn@latest init"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
-source /Users/hbak/Desktop/prism/code/frontend/scripts/new-worktree-function.sh
+alias nw="$HOME/.dotfiles/scripts/new-worktree.sh"
 alias cat="bat"
 alias rm="echo 'Use trash-cli instead. Usage: trash'"
 
