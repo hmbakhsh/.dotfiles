@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-# Script to create a new branch from dev and set up a worktree
-# Usage: ./scripts/new-worktree.sh <branch-name> [--env <path>]
+# Script to create a new branch and set up a worktree
+# Usage: nw <branch-name> [--base <branch>] [--env <path>]
 
 # Parse arguments
 BRANCH_NAME=""
+BASE_BRANCH=""
 ENV_FILE=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    --base|-b)
+      BASE_BRANCH="$2"
+      shift 2
+      ;;
     --env|-e)
       ENV_FILE="$2"
       shift 2
@@ -19,7 +24,7 @@ while [[ $# -gt 0 ]]; do
         BRANCH_NAME="$1"
       else
         echo "Error: Unknown argument '$1'"
-        echo "Usage: ./scripts/new-worktree.sh <branch-name> [--env <path>]"
+        echo "Usage: nw <branch-name> [--base <branch>] [--env <path>]"
         exit 1
       fi
       shift
@@ -29,8 +34,22 @@ done
 
 if [ -z "$BRANCH_NAME" ]; then
   echo "Error: Branch name required"
-  echo "Usage: ./scripts/new-worktree.sh <branch-name> [--env <path>]"
+  echo "Usage: nw <branch-name> [--base <branch>] [--env <path>]"
   exit 1
+fi
+
+# Auto-detect base branch if not specified
+if [ -z "$BASE_BRANCH" ]; then
+  for branch in main master dev; do
+    if git show-ref --verify --quiet "refs/remotes/origin/$branch" 2>/dev/null; then
+      BASE_BRANCH="$branch"
+      break
+    fi
+  done
+  if [ -z "$BASE_BRANCH" ]; then
+    echo "Error: Could not detect base branch (main/master/dev). Use --base to specify."
+    exit 1
+  fi
 fi
 
 # Replace '/' with '-' for directory name
@@ -39,16 +58,17 @@ WORKTREE_PATH="../${DIR_NAME}"
 MAIN_WORKTREE_PATH="$(git rev-parse --show-toplevel)"
 
 echo "Creating branch: ${BRANCH_NAME}"
+echo "Base branch: ${BASE_BRANCH}"
 echo "Worktree path: ${WORKTREE_PATH}"
 echo ""
 
 # Fetch latest changes
 echo "Fetching latest changes..."
-git fetch origin dev
+git fetch origin "${BASE_BRANCH}"
 
-# Create new branch from dev
-echo "Creating branch '${BRANCH_NAME}' from dev..."
-git branch "${BRANCH_NAME}" dev
+# Create new branch from base
+echo "Creating branch '${BRANCH_NAME}' from ${BASE_BRANCH}..."
+git branch "${BRANCH_NAME}" "origin/${BASE_BRANCH}"
 
 # Create worktree
 echo "Creating worktree at ${WORKTREE_PATH}..."
