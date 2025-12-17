@@ -50,6 +50,13 @@ return {
         desc = "Rename Symbol",
         has = "rename",
       })
+
+      -- Disable markdown LSP diagnostics but keep formatting
+      opts.servers.marksman = {
+        handlers = {
+          ["textDocument/publishDiagnostics"] = function() end,
+        },
+      }
     end,
   },
 }
