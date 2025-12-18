@@ -173,7 +173,17 @@ alias scn="bunx --bun shadcn@latest init"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
-alias nw="$HOME/.dotfiles/scripts/new-worktree.sh"
+nw() {
+  local output
+  output=$("$HOME/.dotfiles/scripts/new-worktree.sh" "$@")
+  local rc=$?
+  echo "$output"
+  if [[ $rc -eq 0 ]]; then
+    local wt_path=$(echo "$output" | grep "__WORKTREE_PATH__:" | cut -d: -f2-)
+    [[ -n "$wt_path" ]] && cd "$wt_path" && ls
+  fi
+  return $rc
+}
 alias cat="bat"
 alias rm="echo 'Use trash-cli instead. Usage: trash'"
 
