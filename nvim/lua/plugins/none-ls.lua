@@ -8,22 +8,12 @@ local eslint_filetypes = {
   "typescriptreact",
 }
 
-local eslint_config_files = {
-  ".eslintrc",
-  ".eslintrc.js",
-  ".eslintrc.cjs",
-  ".eslintrc.json",
-  "eslint.config.js",
-  "eslint.config.mjs",
-  "eslint.config.cjs",
-}
-
 local function is_eslint_ft(bufnr)
   return vim.tbl_contains(eslint_filetypes, vim.bo[bufnr].filetype)
 end
 
 return {
-  -- ensure prettierd and eslint_d are installed via mason
+  -- ensure prettierd and eslint-lsp are installed via mason
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
@@ -34,13 +24,9 @@ return {
         end
       end
       ensure("prettierd")
-      ensure("eslint_d")
       ensure("eslint-lsp")
     end,
   },
-
-  -- bring in the community extras (eslint_d lives here now)
-  { "nvimtools/none-ls-extras.nvim" },
 
   -- disable jsonls formatting to let prettierd handle it
   {
@@ -85,27 +71,12 @@ return {
     opts = function()
       local null_ls = require("null-ls")
 
-      -- extras sources
-      local eslint_diag = require("none-ls.diagnostics.eslint_d").with({
-        filetypes = eslint_filetypes,
-        condition = function(utils)
-          return utils.root_has_file(eslint_config_files)
-        end,
-      })
-      local eslint_actions = require("none-ls.code_actions.eslint_d").with({
-        filetypes = eslint_filetypes,
-        condition = function(utils)
-          return utils.root_has_file(eslint_config_files)
-        end,
-      })
-      -- if you ever want eslint_d formatting too, uncomment:
-      -- local eslint_fmt = require("none-ls.formatting.eslint_d").with({
-      --   filetypes = eslint_filetypes,
-      -- })
+      -- NOTE: Using ESLint LSP for linting/fixing (configured above), not eslint_d
+      -- This avoids duplicate ESLint runs on save
 
       return {
         sources = {
-          -- formatting: prettierd only (avoid conflicts)
+          -- formatting: prettierd only (eslint handled by eslint LSP)
           null_ls.builtins.formatting.prettierd.with({
             filetypes = {
               "javascript",
@@ -116,11 +87,6 @@ return {
               "jsonc",
             },
           }),
-
-          -- eslint_d from extras
-          eslint_diag,
-          eslint_actions,
-          -- eslint_fmt, -- disabled by default
         },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
