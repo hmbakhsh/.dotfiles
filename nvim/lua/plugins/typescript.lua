@@ -29,6 +29,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 return {
+  -- Disable LazyVim's default TypeScript LSP (vtsls) since we use typescript-tools
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        vtsls = { enabled = false },
+        tsserver = { enabled = false },
+      },
+    },
+  },
+
   {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
