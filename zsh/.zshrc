@@ -185,7 +185,25 @@ nw() {
   return $rc
 }
 alias cat="bat"
-alias rm="echo 'Use trash-cli instead. Usage: trash'"
+
+# Add to ~/.zshrc AFTER any rm alias definitions
+unalias rm 2>/dev/null || true
+rm() {
+  local force_rm=false new_args=()
+  for arg in "$@"; do
+    if [[ "$arg" == "--force-rm" ]]; then
+      force_rm=true
+    else
+      new_args+=("$arg")
+    fi
+  done
+  if $force_rm; then
+    command rm "${new_args[@]}"
+  else
+    echo 'Use trash-cli instead. Usage: trash' >&2
+    return 1
+  fi
+}
 
 unalias v 2>/dev/null
 v() {
@@ -254,6 +272,73 @@ np() {
 }
 
 
+downsize_video() {
+  if [ -z "$1" ]; then
+    echo "Usage: downsize_video <path_to_video>"
+    return 1
+  fi
+
+  local input_path="$1"
+  local filename="${input_path%.*}"
+  local extension="${input_path##*.}"
+  local output_path="${filename}-smaller.${extension}"
+
+  # -y overwrites output if it exists to prevent hanging
+  ffmpeg -y -hide_banner -loglevel error -i "$input_path" \
+    -vcodec libx265 \
+    -crf 28 \
+    -pix_fmt yuv420p \
+    -tag:v hvc1 \
+    -movflags +faststart \
+    "$output_path"
+}
+
+ddo() {
+  local url="$1"
+  local timestamp=$(date +%s)
+  local temp_name="temp_dl_${timestamp}"
+  
+  # 1. Download
+  yt-dlp "$url" -o "${temp_name}.%(ext)s"
+  
+  # 2. Use a glob to find the file (avoiding 'ls' aliases)
+  local file=""
+  for f in ${temp_name}.*; do
+    [ -e "$f" ] && file="$f" && break
+  done
+  
+  if [[ -n "$file" ]]; then
+    # 3. Get actual size (macOS)
+    local size=$(stat -f%z "$file" 2>/dev/null || echo 0)
+    local threshold=$((10 * 1024 * 1024))
+
+    if [ "$size" -gt "$threshold" ]; then
+      echo "File size: $(($size / 1024 / 1024))MB. Downsizing..."
+      
+      downsize_video "$file"
+      
+      local ext="${file##*.}"
+      local output="${temp_name}-smaller.${ext}"
+
+      if [[ -f "$output" ]]; then
+        local new_size=$(stat -f%z "$output" 2>/dev/null || echo 0)
+        # Check if new file is actually smaller
+        if [ "$new_size" -lt "$size" ]; then
+          rm --force-rm "$file"
+          mv "$output" "final_${timestamp}.${ext}"
+          echo "Done: final_${timestamp}.${ext}"
+        fi
+      fi
+    else
+      echo "File is $(($size / 1024 / 1024))MB (under 10MB threshold). Skipping."
+      mv "$file" "final_${timestamp}.${file##*.}"
+    fi
+    open .
+  else
+    echo "Error: Downloaded file not found."
+  fi
+}
+
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \
@@ -263,6 +348,10 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line
 
 # bun completions
 [ -s "/Users/hbak/.bun/_bun" ] && source "/Users/hbak/.bun/_bun"
@@ -277,3 +366,5 @@ export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
