@@ -173,17 +173,7 @@ alias scn="bunx --bun shadcn@latest init"
 alias zrc="vim ~/.zshrc"
 alias szrcc="source ~/.zshrc"
 alias szrc="tmux list-panes -s -F '#{pane_id}' | xargs -I{} tmux send-keys -t {} 'source ~/.zshrc' Enter"
-nw() {
-  local output
-  output=$("$HOME/.dotfiles/scripts/new-worktree.sh" "$@")
-  local rc=$?
-  echo "$output"
-  if [[ $rc -eq 0 ]]; then
-    local wt_path=$(echo "$output" | grep "__WORKTREE_PATH__:" | cut -d: -f2-)
-    [[ -n "$wt_path" ]] && cd "$wt_path" && ls
-  fi
-  return $rc
-}
+source "$HOME/.dotfiles/scripts/gwt.sh"
 alias cat="bat"
 
 # Add to ~/.zshrc AFTER any rm alias definitions
@@ -362,6 +352,10 @@ export PATH="$HOME/.local/bin:$PATH"
 # Added by Antigravity
 export PATH="/Users/hbak/.antigravity/antigravity/bin:$PATH"
 export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
+
+export INFISICAL_CLIENT_ID=4519f918-b009-4624-b001-11b965fbedad
+export INFISICAL_CLIENT_SECRET=f7610703c3a0a378f5bffbd7146747b03c04fe886a7761d2da25d3a671e699c2
+export INFISICAL_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eUlkIjoiNWQ3YWMxYTktOGM2MC00OTMxLWIzNTEtNTIwMmMyNjMxMTU5IiwiY2xpZW50U2VjcmV0SWQiOiJlOTJiOGQ3OC1lOTI2LTQxOTAtODgzOS01NGEwYTU4NzliMzkiLCJpZGVudGl0eUFjY2Vzc1Rva2VuSWQiOiJlYzViNTFjYy1lZDE1LTRhOWEtOTY0Ni0yM2JkZWFjY2YwZjciLCJhdXRoVG9rZW5UeXBlIjoiaWRlbnRpdHlBY2Nlc3NUb2tlbiIsImlhdCI6MTc2OTc5NTgxMCwiZXhwIjoxNzcyMzg3ODEwfQ.EEJvL_cMr2wdhJ1FaiP4Vgs0iTByrS-p3kcOcCJIyFQ
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
