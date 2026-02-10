@@ -6,6 +6,9 @@ return {
     config = function()
       require("render-markdown").setup({
         enabled = true,
+        heading = {
+          enabled = false,
+        },
         checkbox = {
           enabled = true,
           unchecked = { icon = "☐ " },
