@@ -94,18 +94,29 @@ gwt() {
 
   # All prompts completed - now create branch and worktree
   echo ""
-  echo "Fetching latest changes..."
-  git fetch origin "${base_branch}" || return 1
 
-  echo "Creating branch '${branch_name}' from ${base_branch}..."
-  git branch "${branch_name}" "origin/${base_branch}" || return 1
-  branch_created=true
+  if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
+    # Branch already exists - just create worktree for it
+    echo "Branch '${branch_name}' already exists, opening in worktree..."
+    echo "Creating worktree at ${worktree_path}..."
+    if ! git worktree add "${worktree_path}" "${branch_name}"; then
+      return 1
+    fi
+  else
+    # New branch - fetch, create branch, then worktree
+    echo "Fetching latest changes..."
+    git fetch origin "${base_branch}" || return 1
 
-  echo "Creating worktree at ${worktree_path}..."
-  if ! git worktree add "${worktree_path}" "${branch_name}"; then
-    echo "Cleaning up: deleting branch '${branch_name}'..."
-    git branch -D "${branch_name}" 2>/dev/null
-    return 1
+    echo "Creating branch '${branch_name}' from ${base_branch}..."
+    git branch "${branch_name}" "origin/${base_branch}" || return 1
+    branch_created=true
+
+    echo "Creating worktree at ${worktree_path}..."
+    if ! git worktree add "${worktree_path}" "${branch_name}"; then
+      echo "Cleaning up: deleting branch '${branch_name}'..."
+      git branch -D "${branch_name}" 2>/dev/null
+      return 1
+    fi
   fi
 
   # Copy env file if we have a valid source
@@ -122,6 +133,145 @@ gwt() {
 
   echo ""
   echo "Done!"
+  echo ""
+
+  cd "${worktree_path}" && ls
+}
+
+# Move the current branch into a new worktree
+# Usage: gwt-mv [--env <path>]
+
+gwt-mv() {
+  local env_file=""
+
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --env|-e) env_file="$2"; shift 2 ;;
+      --help|-h)
+        echo "Usage: gwt-mv [--env <path>]"
+        echo ""
+        echo "Moves the current branch into a git worktree."
+        echo "The current checkout switches back to the default branch."
+        echo ""
+        echo "Options:"
+        echo "  --env, -e <path>  Environment file to copy into worktree"
+        return 0
+        ;;
+      *)
+        echo "Error: Unknown argument '$1'"
+        echo "Usage: gwt-mv [--env <path>]"
+        return 1
+        ;;
+    esac
+  done
+
+  local branch_name=$(git branch --show-current 2>/dev/null)
+  if [[ -z "$branch_name" ]]; then
+    echo "Error: Not on a branch (detached HEAD?)."
+    return 1
+  fi
+
+  # Auto-detect default branch
+  local default_branch
+  default_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|refs/remotes/origin/||')
+  if [[ -z "$default_branch" ]] && command -v gh &>/dev/null; then
+    default_branch=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name 2>/dev/null)
+  fi
+  if [[ -z "$default_branch" ]]; then
+    echo "Error: Could not detect default branch."
+    return 1
+  fi
+
+  if [[ "$branch_name" == "$default_branch" ]]; then
+    echo "Error: You're on the default branch (${default_branch}). Nothing to move."
+    return 1
+  fi
+
+  local main_worktree_path="$(git rev-parse --show-toplevel)"
+  local dir_name="${branch_name//\//-}"
+  local worktree_path="../${dir_name}"
+
+  echo ""
+  echo "Moving branch into worktree:"
+  echo "  Branch: ${branch_name}"
+  echo "  Worktree: ${worktree_path}"
+  echo "  This checkout will switch to: ${default_branch}"
+  echo ""
+
+  # Check for uncommitted changes
+  local has_staged=$(git diff --cached --quiet 2>/dev/null; echo $?)
+  local has_unstaged=$(git diff --quiet 2>/dev/null; echo $?)
+  local has_untracked=$(git ls-files --others --exclude-standard 2>/dev/null | head -1)
+
+  if [[ "$has_staged" -ne 0 ]] || [[ "$has_unstaged" -ne 0 ]] || [[ -n "$has_untracked" ]]; then
+    echo "Warning: You have uncommitted changes!"
+    [[ "$has_staged" -ne 0 ]] && echo "  - Staged changes"
+    [[ "$has_unstaged" -ne 0 ]] && echo "  - Unstaged changes"
+    [[ -n "$has_untracked" ]] && echo "  - Untracked files"
+    echo ""
+    echo "These changes live in your working directory, NOT on the branch."
+    echo "They will stay here (on ${default_branch}) and won't be in the worktree."
+    echo "Commit or stash them first if you want them on '${branch_name}'."
+    echo ""
+    read -k 1 "reply?Continue anyway? (y/N): "
+    echo
+    if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+      echo "Aborted. Commit your changes first, then retry."
+      return 1
+    fi
+  fi
+
+  # Handle environment file prompts BEFORE making changes
+  local env_source="" env_dest_name=".env.local"
+
+  if [[ -n "$env_file" ]]; then
+    env_source="${~env_file}"
+    if [[ ! -f "$env_source" ]]; then
+      echo "Warning: Specified env file not found: ${env_source}"
+      env_source=""
+    else
+      env_dest_name=$(basename "$env_source")
+    fi
+  elif [[ -f "${main_worktree_path}/.env.local" ]]; then
+    read -k 1 "reply?Copy .env.local to new worktree? (Y/n): "
+    echo
+    if [[ "$reply" =~ ^[Yy]$ ]] || [[ -z "$reply" ]]; then
+      env_source="${main_worktree_path}/.env.local"
+    fi
+  fi
+
+  # Switch current checkout to default branch so the branch is free
+  echo ""
+  echo "Switching to ${default_branch}..."
+  git checkout "${default_branch}" || {
+    echo "Error: Could not switch to ${default_branch}."
+    echo "Commit or stash your changes first."
+    return 1
+  }
+
+  # Create the worktree for the existing branch
+  echo "Creating worktree at ${worktree_path}..."
+  if ! git worktree add "${worktree_path}" "${branch_name}"; then
+    echo "Error: Failed to create worktree. Switching back to ${branch_name}..."
+    git checkout "${branch_name}" 2>/dev/null
+    return 1
+  fi
+
+  # Copy env file if we have a valid source
+  if [[ -n "$env_source" ]] && [[ -f "$env_source" ]]; then
+    echo "Copying $(basename "$env_source") to worktree..."
+    cp "$env_source" "${worktree_path}/${env_dest_name}"
+    echo "Done: ${env_dest_name} copied"
+  fi
+
+  # Install dependencies
+  echo ""
+  echo "Installing dependencies with bun..."
+  (cd "${worktree_path}" && bun install)
+
+  echo ""
+  echo "Done! Moved '${branch_name}' into worktree."
   echo ""
 
   cd "${worktree_path}" && ls
