@@ -49,8 +49,14 @@ gwt() {
   fi
 
   local dir_name="${branch_name//\//-}"
-  local worktree_path="../${dir_name}"
   local main_worktree_path="$(git rev-parse --show-toplevel)"
+  local repo_name=$(basename "$main_worktree_path")
+  local worktree_path
+  if [[ "$repo_name" == "frontend" || "$repo_name" == "backend" ]]; then
+    worktree_path="../z_worktrees/${repo_name}/${dir_name}"
+  else
+    worktree_path="../${dir_name}"
+  fi
 
   echo ""
   echo "Branch: ${branch_name}"
@@ -94,6 +100,9 @@ gwt() {
 
   # All prompts completed - now create branch and worktree
   echo ""
+
+  # Ensure worktree parent directory exists
+  mkdir -p "$(dirname "${worktree_path}")"
 
   if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
     # Branch already exists - just create worktree for it
@@ -189,8 +198,14 @@ gwt-mv() {
   fi
 
   local main_worktree_path="$(git rev-parse --show-toplevel)"
+  local repo_name=$(basename "$main_worktree_path")
   local dir_name="${branch_name//\//-}"
-  local worktree_path="../${dir_name}"
+  local worktree_path
+  if [[ "$repo_name" == "frontend" || "$repo_name" == "backend" ]]; then
+    worktree_path="../z_worktrees/${repo_name}/${dir_name}"
+  else
+    worktree_path="../${dir_name}"
+  fi
 
   echo ""
   echo "Moving branch into worktree:"
@@ -239,6 +254,20 @@ gwt-mv() {
     if [[ "$reply" =~ ^[Yy]$ ]] || [[ -z "$reply" ]]; then
       env_source="${main_worktree_path}/.env.local"
     fi
+  else
+    read -k 1 "reply?Copy environment file? (y/N): "
+    echo
+    if [[ "$reply" =~ ^[Yy]$ ]]; then
+      read "env_input?Enter path to env file: "
+      env_source="${~env_input}"
+      if [[ ! -f "$env_source" ]]; then
+        echo "Warning: File not found: ${env_source}"
+        echo "Skipping env file copy."
+        env_source=""
+      else
+        env_dest_name=$(basename "$env_source")
+      fi
+    fi
   fi
 
   # Switch current checkout to default branch so the branch is free
@@ -249,6 +278,9 @@ gwt-mv() {
     echo "Commit or stash your changes first."
     return 1
   }
+
+  # Ensure worktree parent directory exists
+  mkdir -p "$(dirname "${worktree_path}")"
 
   # Create the worktree for the existing branch
   echo "Creating worktree at ${worktree_path}..."
@@ -301,7 +333,20 @@ gwt-rm() {
 
   local selected_idx=""
 
-  if [[ -n "$1" ]]; then
+  if [[ "$1" == "." ]]; then
+    # Remove the worktree we're currently inside
+    local current_path="${PWD:A}"
+    for i in {1..${#worktrees[@]}}; do
+      if [[ "$current_path" == "${worktrees[$i]:A}"* ]]; then
+        selected_idx=$i
+        break
+      fi
+    done
+    if [[ -z "$selected_idx" ]]; then
+      echo "Error: Not inside a worktree"
+      return 1
+    fi
+  elif [[ -n "$1" ]]; then
     # Match by branch name
     for i in {1..${#branches[@]}}; do
       if [[ "${branches[$i]}" == "$1" ]]; then
