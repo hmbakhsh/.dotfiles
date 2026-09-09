@@ -1,0 +1,21 @@
+# Machine-local Box integration. No laptop paths or credentials.
+path=("$HOME/.ascii" /usr/local/go/bin /usr/local/cargo/bin $path)
+export RUSTUP_HOME=/usr/local/rustup
+export DISPLAY=${DISPLAY:-:0} XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
+export CLAUDE_CODE_TMUX_TRUECOLOR=1 COLORTERM=truecolor
+box() {
+  local current_file=$(mktemp) old_current_file=${BOX_CURRENT_ID_FILE-}
+  local box_status current_id
+  export BOX_CURRENT_ID_FILE="$current_file"
+  command /usr/local/bin/box "$@"
+  box_status=$?
+  if (( box_status == 0 )) && [[ "$1" == (new|start|fork) && -s "$current_file" ]]; then
+    current_id=$(tr -d '[:space:]' < "$current_file")
+    [[ -z "$current_id" ]] || export BOX_CURRENT_ID="$current_id"
+  fi
+  if [[ -n "$old_current_file" ]]; then export BOX_CURRENT_ID_FILE="$old_current_file"
+  else unset BOX_CURRENT_ID_FILE
+  fi
+  command rm -f "$current_file"
+  return "$box_status"
+}
