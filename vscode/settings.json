@@ -10,14 +10,14 @@
   "editor.fontFamily": "\"JetBrains Mono\", Menlo, Monaco, 'Courier New', monospace",
   "editor.cursorBlinking": "solid",
   "files.exclude": {
-    "**/__init__.py": true
+    "**/__init__.py": true,
   },
   "editor.formatOnSave": true,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
+      "source.organizeImports": "explicit",
+    },
   },
   "terminal.integrated.fontFamily": "Hack Nerd Font",
   "python.analysis.typeCheckingMode": "strict",
@@ -35,12 +35,12 @@
     "reportOptionalCall": "none",
     "reportOptionalIterable": "none",
     "reportOptionalContextManager": "none",
-    "reportPrivateImportUsage": "none"
+    "reportPrivateImportUsage": "none",
   },
-  "workbench.colorTheme": "Solarized Light",
+  "workbench.colorTheme": "Cursor Dark Midnight",
   "explorer.excludeGitIgnore": true,
   "files.associations": {
-    ".env*": "dotenv"
+    ".env*": "dotenv",
   },
   "dotenv.enableAutocloaking": false,
   "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,bin,obj,dist,vendor,.next}/**/*",
@@ -85,7 +85,7 @@
     "**/data": true,
     "**/.venv": true,
     "**/__pycache__": true,
-    "**/__init__.py": true
+    "**/__init__.py": true,
   },
   // Code
   "editor.lineHeight": 1.7,
@@ -106,18 +106,18 @@
     "titleBarStyle": "hiddenInset",
     "titleBarOverlay": {
       "color": "#292929",
-      "symbolColor": "#fff"
+      "symbolColor": "#fff",
     },
     "trafficLightPosition": {
       "x": 8,
-      "y": 9
-    }
+      "y": 9,
+    },
   },
   "apc.header": {
-    "height": 34
+    "height": 34,
   },
   "apc.parts.font.family": {
-    "sidebar": "JetBrains Mono"
+    "sidebar": "JetBrains Mono",
   },
   "workbench.colorCustomizations": {
     "[Fleet*]": {
@@ -134,11 +134,11 @@
       "editorInlayHint.foreground": "#5D5D5D",
       "editorInlayHint.background": "#FFFFFF00",
       // zsh auto suggestions
-      "terminal.ansiBrightBlack": "#5D5D5D"
-    }
+      "terminal.ansiBrightBlack": "#5D5D5D",
+    },
   },
   "editor.tokenColorCustomizations": {
-    "textMateRules": []
+    "textMateRules": [],
   },
   // https://marketplace.visualstudio.com/items?itemName=hoovercj.vscode-settings-cycler
   // Can't seem to find above extension in Cursor marketplace
@@ -147,13 +147,17 @@
       "id": "explorer.excludeGitIgnore",
       "values": [
         {
-          "explorer.excludeGitIgnore": true
+          "explorer.excludeGitIgnore": true,
         },
         {
-          "explorer.excludeGitIgnore": false
-        }
-      ]
-    }
+          "explorer.excludeGitIgnore": false,
+        },
+      ],
+    },
   ],
-  "editor.accessibilitySupport": "off"
+  "editor.accessibilitySupport": "off",
+  "remote.SSH.remotePlatform": {
+    "Administrator@149.102.135.190": "windows"
+  },
+  "vim.disableExtension": true,
 }

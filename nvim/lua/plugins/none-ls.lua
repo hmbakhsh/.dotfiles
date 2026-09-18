@@ -1,4 +1,3 @@
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local eslint_fix_group = vim.api.nvim_create_augroup("EslintFixes", {})
 
 local eslint_filetypes = {
@@ -8,12 +7,33 @@ local eslint_filetypes = {
   "typescriptreact",
 }
 
+local oxfmt_filetypes = {
+  "javascript",
+  "javascriptreact",
+  "typescript",
+  "typescriptreact",
+  "json",
+  "jsonc",
+  "json5",
+  "yaml",
+  "html",
+  "vue",
+  "css",
+  "scss",
+  "less",
+  "graphql",
+  "markdown",
+  "mdx",
+  "handlebars",
+  "toml",
+}
+
 local function is_eslint_ft(bufnr)
   return vim.tbl_contains(eslint_filetypes, vim.bo[bufnr].filetype)
 end
 
 return {
-  -- ensure prettierd and eslint-lsp are installed via mason
+  -- ensure eslint-lsp is installed via mason
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
@@ -23,12 +43,42 @@ return {
           table.insert(opts.ensure_installed, pkg)
         end
       end
-      ensure("prettierd")
       ensure("eslint-lsp")
     end,
   },
 
-  -- disable jsonls formatting to let prettierd handle it
+  -- use oxfmt CLI as the formatter via conform (replaces prettier)
+  {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      -- register oxfmt as a custom formatter
+      opts.formatters = opts.formatters or {}
+      opts.formatters.oxfmt = {
+        command = "oxfmt",
+        args = { "--stdin-filepath", "$FILENAME" },
+        stdin = true,
+      }
+
+      -- assign oxfmt to all relevant filetypes
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      for _, ft in ipairs(oxfmt_filetypes) do
+        opts.formatters_by_ft[ft] = { "oxfmt" }
+      end
+    end,
+  },
+
+  -- disable typescript-tools formatting so it can't interfere
+  {
+    "pmizio/typescript-tools.nvim",
+    opts = {
+      on_attach = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+      end,
+    },
+  },
+
+  -- disable jsonls formatting, configure eslint
   {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
@@ -46,7 +96,7 @@ return {
         },
       }
 
-      -- setup code action on save for eslint
+      -- eslint fix-all on save
       opts.setup = opts.setup or {}
       opts.setup.eslint = function()
         require("lazyvim.util").lsp.on_attach(function(client, bufnr)
@@ -64,51 +114,9 @@ return {
     end,
   },
 
-  -- configure none-ls for prettier + eslint_d (diagnostics/actions)
+  -- disable none-ls (no longer needed)
   {
     "nvimtools/none-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = function()
-      local null_ls = require("null-ls")
-
-      -- NOTE: Using ESLint LSP for linting/fixing (configured above), not eslint_d
-      -- This avoids duplicate ESLint runs on save
-
-      return {
-        sources = {
-          -- formatting: prettierd only (eslint handled by eslint LSP)
-          null_ls.builtins.formatting.prettierd.with({
-            filetypes = {
-              "javascript",
-              "javascriptreact",
-              "typescript",
-              "typescriptreact",
-              "json",
-              "jsonc",
-            },
-          }),
-        },
-        on_attach = function(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              group = augroup,
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.format({
-                  bufnr = bufnr,
-                  filter = function(fmt_client)
-                    return fmt_client.name == "null-ls"
-                  end,
-                })
-              end,
-            })
-          end
-        end,
-      }
-    end,
-    config = function(_, opts)
-      require("null-ls").setup(opts)
-    end,
+    enabled = false,
   },
 }
