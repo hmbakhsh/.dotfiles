@@ -1,0 +1,14 @@
+{
+  "skills": {
+    "dev-machine-cleanup": {
+      "digest": "e01ef594d94ea56f0332e06f6daca7188bac8736f7902708c4236005724bbc1a",
+      "imported_at": "2026-09-18T16:25:57.091865+00:00",
+      "source": "personal"
+    },
+    "personal-skill-install": {
+      "digest": "11f4389a81de9f818821e7d8845a3026efa0cc4be1e39ddfc44f002a98ec79bb",
+      "imported_at": "2026-09-18T16:25:57.149420+00:00",
+      "source": "personal"
+    }
+  }
+}

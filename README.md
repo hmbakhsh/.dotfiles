@@ -26,3 +26,14 @@ ln -s path/to/dotfile/ where/the/file/needs/to/be/stored
 ```bash
 brew bundle dump --file=~/Brewfile --force
 ```
+
+### Personal agent skills
+
+Personal skills and global agent instructions are managed from `agents/`:
+
+```bash
+python3 ~/.dotfiles/agents/install.py
+python3 ~/.dotfiles/agents/install.py --check
+```
+
+See [`agents/README.md`](agents/README.md).
