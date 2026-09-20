@@ -14,6 +14,7 @@ ln -s ~/.dotfiles/nvim ~/.config/nvim
 ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/copyfile /opt/homebrew/bin/copyfile # dependency: brew install reattach-to-user-namespace
 brew bundle --file=~/.dotfiles/brew/Brewfile
+~/.dotfiles/scripts/install-sketchybar.sh
 ```
 ---
 ### FAQ

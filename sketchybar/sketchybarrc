@@ -1,0 +1,158 @@
+# This is a demo config to showcase some of the most important commands.
+# It is meant to be changed and configured, as it is intentionally kept sparse.
+# For a (much) more advanced configuration example see my dotfiles:
+# https://github.com/FelixKratz/dotfiles
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+sketchybar --load-font "$CONFIG_DIR/fonts/sketchybar-app-font.ttf"
+sketchybar --load-font "$HOME/Library/Fonts/SketchyBarStatus6.ttf"
+
+##### Bar Appearance #####
+# Configuring the general appearance of the bar.
+# These are only some of the options available. For all options see:
+# https://felixkratz.github.io/SketchyBar/config/bar
+# If you are looking for other colors, see the color picker:
+# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+
+sketchybar --bar position=top height=40 topmost=on sticky=on blur_radius=0 color=0xff354747
+
+##### Changing Defaults #####
+# We now change some default values, which are applied to all further items.
+# For a full list of all available item properties see:
+# https://felixkratz.github.io/SketchyBar/config/items
+
+default=(
+  padding_left=5
+  padding_right=5
+  icon.font="Hack Nerd Font:Bold:17.0"
+  label.font="JetBrains Mono:Medium:14.0"
+  icon.color=0xffffffff
+  label.color=0xffffffff
+  icon.padding_left=4
+  icon.padding_right=4
+  label.padding_left=4
+  label.padding_right=4
+)
+sketchybar --default "${default[@]}"
+
+##### Adding AeroSpace Workspace Indicators #####
+# Show only occupied workspaces and the currently focused workspace.
+sketchybar --add event aerospace_workspace_refresh
+
+for sid in $(/opt/homebrew/bin/aerospace list-workspaces --all); do
+  workspace=(
+    icon="$sid"
+    icon.font="JetBrains Mono:Bold:16.0"
+    icon.padding_left=8
+    icon.padding_right=8
+    label.font="sketchybar-app-font:Regular:16.0"
+    label.color=0xffc5cece
+    label.padding_left=1
+    label.padding_right=8
+    label.drawing=off
+    background.color=0x55ffffff
+    background.corner_radius=6
+    background.height=26
+    background.drawing=off
+    click_script="/opt/homebrew/bin/aerospace workspace $sid"
+  )
+  sketchybar --add item space."$sid" left \
+             --set space."$sid" "${workspace[@]}"
+done
+
+sketchybar --add item aerospace_workspace_listener left \
+           --set aerospace_workspace_listener drawing=off \
+                 script="$PLUGIN_DIR/aerospace.sh" \
+           --subscribe aerospace_workspace_listener \
+                 aerospace_workspace_refresh front_app_switched space_windows_change
+
+##### Adding Left Items #####
+# We add some regular items to the left side of the bar, where
+# only the properties deviating from the current defaults need to be set
+
+sketchybar --add item chevron left \
+           --set chevron icon= label.drawing=off \
+           --add item front_app left \
+           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
+
+##### Adding Right Items #####
+# In the same way as the left items we can add items to the right side.
+# Additional position (e.g. center) are available, see:
+# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
+
+# Some items refresh on a fixed cycle, e.g. the clock runs its script once
+# every 10s. Other items respond to events they subscribe to, e.g. the
+# volume.sh script is only executed once an actual change in system audio
+# volume is registered. More info about the event system can be found here:
+# https://felixkratz.github.io/SketchyBar/config/events
+
+sketchybar --add item clock right \
+           --set clock update_freq=10 padding_left=5 padding_right=5 icon.drawing=off \
+                    label.font="JetBrains Mono:Medium:14.0" \
+                   label.padding_left=2 label.padding_right=2 \
+                   script="$PLUGIN_DIR/clock.sh" \
+            --add item control_center right \
+            --set control_center padding_left=5 padding_right=3 \
+                   icon="" label.drawing=off \
+                   icon.font="SketchyBar Status 6:Regular:15.0" \
+                   icon.y_offset=-1 \
+                   icon.padding_left=2 icon.padding_right=2 \
+                   script="$PLUGIN_DIR/control_center.sh" \
+            --subscribe control_center mouse.clicked \
+            --add item volume right \
+            --set volume padding_left=5 padding_right=6 \
+                   icon.font="Hack Nerd Font:Regular:16.0" icon.width=13 \
+                   icon.padding_left=2 icon.padding_right=0 \
+                    label.font="JetBrains Mono:Medium:14.0" \
+                   label.width=36 label.align=right \
+                   label.padding_left=0 label.padding_right=2 \
+                   script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change \
+            --add item wifi right \
+            --set wifi update_freq=30 label.drawing=off \
+                   width=16 padding_left=4 padding_right=4 \
+                   icon="" icon.width=16 icon.drawing=on \
+                   icon.font="SketchyBar Status 6:Regular:19.0" \
+                   icon.y_offset=-2 \
+                   icon.padding_left=0 icon.padding_right=0 \
+                   background.drawing=off \
+                   script="$PLUGIN_DIR/wifi.sh" \
+                 click_script="/usr/bin/open 'x-apple.systempreferences:com.apple.wifi-settings-extension'" \
+           --subscribe wifi system_woke \
+            --add item battery right \
+            --set battery update_freq=120 padding_left=4 padding_right=14 \
+                    icon="" icon.width=25 icon.drawing=on \
+                    icon.font="SketchyBar Status 6:Regular:29.0" \
+                    icon.y_offset=-3 \
+                    icon.padding_left=1 icon.padding_right=1 \
+                    icon.background.drawing=off \
+                    label.font="JetBrains Mono:Medium:14.0" \
+                  label.width=36 label.align=right \
+                  label.padding_left=0 label.padding_right=2 \
+                 script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery system_woke power_source_change \
+           --add item status_separator right \
+           --set status_separator icon="│" icon.color=0x66ffffff \
+                  icon.font="Hack Nerd Font:Regular:16.0" \
+                  icon.padding_left=4 icon.padding_right=4 \
+                  label.drawing=off \
+           --add item meeting_event right \
+           --set meeting_event icon.drawing=off \
+                  label.font="JetBrains Mono:Medium:14.0" \
+                 label.padding_left=0 label.padding_right=4 \
+                 click_script="/usr/bin/open -a Calendar" \
+           --add item meeting right \
+            --set meeting update_freq=30 icon=󰃭 \
+                  label.font="JetBrains Mono:Bold:14.0" \
+                  label.padding_right=6 \
+                 script="$PLUGIN_DIR/meeting.sh" \
+                 click_script="/usr/bin/open -a Calendar" \
+            --subscribe meeting system_woke
+
+# Right-positioned items render in reverse insertion order.
+sketchybar --move control_center before clock
+
+##### Force all scripts to run the first time (never do this in a script) #####
+sketchybar --update
