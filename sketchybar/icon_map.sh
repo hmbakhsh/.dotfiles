@@ -1557,7 +1557,7 @@ function __icon_map() {
    "System Information" | "System Profiler")
         icon_result=":system_information:"
         ;;
-   "T3 Code" | "T3 Code (Alpha)")
+   "T3 Code" | "T3 Code (Alpha)" | "T3 Code (Nightly)")
         icon_result=":t3_code:"
         ;;
    "T3 Chat")

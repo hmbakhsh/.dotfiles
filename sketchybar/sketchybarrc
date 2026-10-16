@@ -37,7 +37,8 @@ default=(
 sketchybar --default "${default[@]}"
 
 ##### Adding AeroSpace Workspace Indicators #####
-# Show only occupied workspaces and the currently focused workspace.
+# Each monitor's bar shows only the occupied or visible workspaces on that
+# monitor. aerospace.sh moves items between bars as workspaces move.
 sketchybar --add event aerospace_workspace_refresh
 
 for sid in $(/opt/homebrew/bin/aerospace list-workspaces --all); do
@@ -65,7 +66,8 @@ sketchybar --add item aerospace_workspace_listener left \
            --set aerospace_workspace_listener drawing=off \
                  script="$PLUGIN_DIR/aerospace.sh" \
            --subscribe aerospace_workspace_listener \
-                 aerospace_workspace_refresh front_app_switched space_windows_change
+                 aerospace_workspace_refresh front_app_switched space_windows_change \
+                 display_change system_woke
 
 ##### Adding Left Items #####
 # We add some regular items to the left side of the bar, where
@@ -113,6 +115,7 @@ sketchybar --add item clock right \
            --subscribe battery system_woke power_source_change \
            --add item status_separator right \
            --set status_separator icon="│" icon.color=0x66ffffff \
+                  padding_left=0 padding_right=11 \
                   icon.font="Hack Nerd Font:Regular:16.0" \
                   icon.padding_left=4 icon.padding_right=4 \
                   label.drawing=off \
@@ -127,7 +130,15 @@ sketchybar --add item clock right \
                   label.padding_right=6 \
                  script="$PLUGIN_DIR/meeting.sh" \
                  click_script="/usr/bin/open -a Calendar" \
-            --subscribe meeting system_woke
+            --subscribe meeting system_woke \
+           --add item granola right \
+           --set granola update_freq=5 icon=":granola:" \
+                  icon.font="sketchybar-app-font:Regular:16.0" \
+                  icon.color=0xff9ca3af \
+                  label.font="JetBrains Mono:Bold:14.0" \
+                  label.drawing=off \
+                  script="$PLUGIN_DIR/granola.sh" \
+           --subscribe granola mouse.clicked system_woke front_app_switched
 
 # Right-positioned items render in reverse insertion order.
 sketchybar --move control_center before clock
