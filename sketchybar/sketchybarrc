@@ -15,7 +15,7 @@ sketchybar --load-font "$HOME/Library/Fonts/SketchyBarStatus6.ttf"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=40 topmost=on sticky=on blur_radius=0 color=0xff354747
+sketchybar --bar position=top height=40 topmost=window sticky=on blur_radius=0 color=0xff0d0d10
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -82,10 +82,8 @@ sketchybar --add item chevron left \
 # Additional position (e.g. center) are available, see:
 # https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
 
-# Some items refresh on a fixed cycle, e.g. the clock runs its script once
-# every 10s. Other items respond to events they subscribe to, e.g. the
-# volume.sh script is only executed once an actual change in system audio
-# volume is registered. More info about the event system can be found here:
+# Some items refresh on a fixed cycle while others respond to subscribed
+# system events. More info about the event system can be found here:
 # https://felixkratz.github.io/SketchyBar/config/events
 
 sketchybar --add item clock right \
@@ -101,26 +99,6 @@ sketchybar --add item clock right \
                    icon.padding_left=2 icon.padding_right=2 \
                    script="$PLUGIN_DIR/control_center.sh" \
             --subscribe control_center mouse.clicked \
-            --add item volume right \
-            --set volume padding_left=5 padding_right=6 \
-                   icon.font="Hack Nerd Font:Regular:16.0" icon.width=13 \
-                   icon.padding_left=2 icon.padding_right=0 \
-                    label.font="JetBrains Mono:Medium:14.0" \
-                   label.width=36 label.align=right \
-                   label.padding_left=0 label.padding_right=2 \
-                   script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change \
-            --add item wifi right \
-            --set wifi update_freq=30 label.drawing=off \
-                   width=16 padding_left=4 padding_right=4 \
-                   icon="" icon.width=16 icon.drawing=on \
-                   icon.font="SketchyBar Status 6:Regular:19.0" \
-                   icon.y_offset=-2 \
-                   icon.padding_left=0 icon.padding_right=0 \
-                   background.drawing=off \
-                   script="$PLUGIN_DIR/wifi.sh" \
-                 click_script="/usr/bin/open 'x-apple.systempreferences:com.apple.wifi-settings-extension'" \
-           --subscribe wifi system_woke \
             --add item battery right \
             --set battery update_freq=120 padding_left=4 padding_right=14 \
                     icon="" icon.width=25 icon.drawing=on \
