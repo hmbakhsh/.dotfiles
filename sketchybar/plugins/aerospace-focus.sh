@@ -2,19 +2,18 @@
 
 SKETCHYBAR=/opt/homebrew/bin/sketchybar
 
-# Keep the switch hot path to a single direct SketchyBar update. The full
+# Keep the switch hot path to direct SketchyBar updates. The full
 # reconciliation (per-monitor placement, the dim pill on other monitors, app
-# icons) is dispatched only after focus is painted.
-args=()
+# icons, items for new workspaces) is dispatched only after focus is painted.
+# Two calls, because a --set on a missing item aborts the rest of its call.
+# H (minimised windows) is never shown, even while focus passes through it.
+[[ "$AEROSPACE_FOCUSED_WORKSPACE" == H ]] || $SKETCHYBAR --set "space.$AEROSPACE_FOCUSED_WORKSPACE" \
+  drawing=on \
+  background.drawing=on \
+  background.color=0x55ffffff \
+  icon.color=0xffffffff
 if [[ -n "$AEROSPACE_PREV_WORKSPACE" ]]; then
-  args+=(--set "space.$AEROSPACE_PREV_WORKSPACE" background.drawing=off icon.color=0xff9ca3af)
+  $SKETCHYBAR --set "space.$AEROSPACE_PREV_WORKSPACE" background.drawing=off icon.color=0xff9ca3af
 fi
-args+=(--set "space.$AEROSPACE_FOCUSED_WORKSPACE"
-  drawing=on
-  background.drawing=on
-  background.color=0x55ffffff
-  icon.color=0xffffffff)
-
-$SKETCHYBAR "${args[@]}"
 
 $SKETCHYBAR --trigger aerospace_workspace_refresh >/dev/null 2>&1 &

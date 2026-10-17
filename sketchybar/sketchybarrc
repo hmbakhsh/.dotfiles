@@ -41,25 +41,11 @@ sketchybar --default "${default[@]}"
 # monitor. aerospace.sh moves items between bars as workspaces move.
 sketchybar --add event aerospace_workspace_refresh
 
+source "$PLUGIN_DIR/space_item.sh"
 for sid in $(/opt/homebrew/bin/aerospace list-workspaces --all); do
-  workspace=(
-    icon="$sid"
-    icon.font="JetBrains Mono:Bold:16.0"
-    icon.padding_left=8
-    icon.padding_right=8
-    label.font="sketchybar-app-font:Regular:16.0"
-    label.color=0xffc5cece
-    label.padding_left=1
-    label.padding_right=8
-    label.drawing=off
-    background.color=0x55ffffff
-    background.corner_radius=6
-    background.height=26
-    background.drawing=off
-    click_script="/opt/homebrew/bin/aerospace workspace $sid"
-  )
+  space_item_props "$sid"
   sketchybar --add item space."$sid" left \
-             --set space."$sid" "${workspace[@]}"
+             --set space."$sid" "${SPACE_ITEM_PROPS[@]}"
 done
 
 sketchybar --add item aerospace_workspace_listener left \
@@ -78,6 +64,13 @@ sketchybar --add item chevron left \
            --add item front_app left \
            --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
+
+# Brings an AeroSpace-"minimised" window back when its app is activated from
+# the Dock or Raycast. See ~/.config/aerospace/minimize.sh.
+sketchybar --add item minimize_watcher left \
+           --set minimize_watcher drawing=off \
+                 script='[ "$SENDER" = front_app_switched ] && "$HOME/.config/aerospace/minimize.sh" on-app-activated "$INFO"' \
+           --subscribe minimize_watcher front_app_switched
 
 ##### Adding Right Items #####
 # In the same way as the left items we can add items to the right side.

@@ -72,7 +72,11 @@ while IFS= read -r event; do
 
   if (( start_epoch <= now )); then
     minutes_left=$(( (end_epoch - now + 59) / 60 ))
-    time_label="${minutes_left} min left"
+    if (( minutes_left >= 60 )); then
+      time_label="$(( minutes_left / 60 ))h $(( minutes_left % 60 ))m left"
+    else
+      time_label="${minutes_left} min left"
+    fi
     event_label="$short_title"
     icon_color=0xffffffff
     break
