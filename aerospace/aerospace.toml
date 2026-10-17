@@ -1,0 +1,217 @@
+# Config version for compatibility and deprecations
+# See: https://nikitabobko.github.io/AeroSpace/guide#config-version
+config-version = 2
+
+after-startup-command = ['exec-and-forget /opt/homebrew/bin/sketchybar']
+
+start-at-login = false
+
+
+# Keep SketchyBar's workspace indicator synchronized with AeroSpace.
+# Also pulls a "minimised" window back out of workspace H when its app is
+# activated from the Dock, Cmd-Tab or Raycast (see aerospace/minimize.sh).
+exec-on-workspace-change = [
+    '/bin/bash', '-c',
+    '/Users/hbak/.config/aerospace/minimize.sh on-workspace-change; /Users/hbak/.config/sketchybar/plugins/aerospace-focus.sh'
+]
+auto-reload-config = false
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+accordion-padding = 30
+
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Hidden utility apps (Raycast, password prompts, etc.) should come back when
+# focused instead of remaining invisibly selected.
+automatically-unhide-macos-hidden-apps = true
+
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B",
+                         "C", "D", "E", "F", "G", "I", "M", "N", "O", "P", "Q",
+                         "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+
+on-mode-changed = []
+
+focus-follows-mouse.enabled = false
+
+key-mapping.preset = 'qwerty'
+
+# Only Helium is auto-assigned; everything else is manually placed.
+[[on-window-detected]]
+if.app-id = 'net.imput.helium'
+run = 'move-node-to-workspace 2'
+
+# macOS auth prompts (Touch ID / password sheet, incl. the 1Password browser
+# extension unlock) must float over whatever is focused. Placed above the
+# route-away rule so they are never bounced to another workspace.
+[[on-window-detected]]
+if.app-id = 'com.apple.LocalAuthentication.UIAgent'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.SecurityAgent'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.coreservices.uiagent'
+run = 'layout floating'
+
+# Workspaces 1 (Ghostty) and 2 (Helium) are reserved. Any other app that
+# would otherwise land there (i.e. it was opened while 1/2 was focused)
+# gets bounced to the earliest free workspace instead of tiling in
+# alongside Ghostty/Helium. See route-away-from-1-2.sh.
+[[on-window-detected]]
+if = 'test %{workspace} = 1 || test %{workspace} = 2'
+run = 'exec-and-forget /Users/hbak/.config/aerospace/route-away-from-1-2.sh'
+
+# Small utility/panel apps float instead of taking a workspace
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.hbak.HexCustom'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.raycast.macos'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Preview'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.spotify.client'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'cc.ffitch.shottr'
+run = 'layout floating'
+
+[gaps]
+inner.horizontal = 0
+inner.vertical = 0
+outer.bottom = 0
+# macOS reserves 25px on the Dell; add the remaining 15px so tiled windows
+# begin exactly below SketchyBar's 40px bar without overlap or a dead strip.
+outer.top = [{ monitor."DELL U2723QE" = 15 }, 0]
+outer.left = 0
+outer.right = 0
+
+# 'main' binding mode — Ctrl+Shift for everything. Not bare Option
+# (transcription), not bare Ctrl (terminal shortcuts like Ctrl-V paste),
+# not Cmd+Ctrl (collides with macOS Lock/Fullscreen/Dictionary/Emoji),
+# not Cmd+Ctrl+Shift (collides with screenshot-to-clipboard on 3/4/5).
+[mode.main.binding]
+
+    ctrl-slash = 'layout tiles horizontal vertical'
+    ctrl-comma = 'layout accordion horizontal vertical'
+
+    # Directional navigation should not grab transient floating dialogs.
+    # At the edge of a monitor it carries on into the neighbouring monitor.
+    ctrl-h = 'focus --ignore-floating --boundaries all-monitors-outer-frame left'
+    ctrl-j = 'focus --ignore-floating --boundaries all-monitors-outer-frame down'
+    ctrl-k = 'focus --ignore-floating --boundaries all-monitors-outer-frame up'
+    ctrl-l = 'focus --ignore-floating --boundaries all-monitors-outer-frame right'
+
+    # Jump to the other monitor, even when its workspace is empty.
+    ctrl-quote = 'focus-monitor --wrap-around next'
+
+    # Easy splits: Option+Shift+arrow sends the window to that half of the
+    # screen. Floating or accordion windows are tiled first, and sizes are
+    # evened out after, so two windows always land as clean halves.
+    alt-shift-left = ['layout tiling', 'layout tiles', 'move left', 'balance-sizes']
+    alt-shift-right = ['layout tiling', 'layout tiles', 'move right', 'balance-sizes']
+    alt-shift-up = ['layout tiling', 'layout tiles', 'move up', 'balance-sizes']
+    alt-shift-down = ['layout tiling', 'layout tiles', 'move down', 'balance-sizes']
+    # Toggle the window filling the whole workspace.
+    alt-shift-f = 'fullscreen'
+
+    ctrl-minus = 'resize smart -50'
+    ctrl-equal = 'resize smart +50'
+
+    ctrl-1 = 'workspace 1'
+    ctrl-2 = 'workspace 2'
+    ctrl-3 = 'workspace 3'
+    ctrl-4 = 'workspace 4'
+    ctrl-5 = 'workspace 5'
+    ctrl-6 = 'workspace 6'
+    ctrl-7 = 'workspace 7'
+    ctrl-8 = 'workspace 8'
+    ctrl-9 = 'workspace 9'
+    ctrl-0 = 'workspace 10'
+
+    # Cycle workspaces left/right (skips empty ones, wraps at the ends)
+    ctrl-shift-h = 'workspace --wrap-around prev'
+    ctrl-shift-l = 'workspace --wrap-around next'
+
+    ctrl-tab = 'workspace-back-and-forth'
+
+    # Instant minimise: park the window on hidden workspace H (no Dock
+    # animation); Cmd-Shift-M brings the last one back. See minimize.sh.
+    cmd-m = 'exec-and-forget /Users/hbak/.config/aerospace/minimize.sh hide'
+    cmd-shift-m = 'exec-and-forget /Users/hbak/.config/aerospace/minimize.sh restore'
+
+    ctrl-semicolon = 'mode service'
+
+# Service mode — enter with Ctrl-Shift-; then press a bare key below.
+# Kept out of the global bindings so these rarer commands can't collide
+# with anything (screenshots, system shortcuts, terminal, transcription).
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main']
+    f = ['layout floating tiling', 'mode main']
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    h = ['move left', 'mode main']
+    j = ['move down', 'mode main']
+    k = ['move up', 'mode main']
+    l = ['move right', 'mode main']
+
+    # Send the window, or the whole workspace, to the other monitor.
+    quote = ['move-node-to-monitor --wrap-around --focus-follows-window next', 'mode main']
+    shift-quote = ['move-workspace-to-monitor --wrap-around next', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']
+
+    1 = ['move-node-to-workspace 1', 'mode main']
+    2 = ['move-node-to-workspace 2', 'mode main']
+    3 = ['move-node-to-workspace 3', 'mode main']
+    4 = ['move-node-to-workspace 4', 'mode main']
+    5 = ['move-node-to-workspace 5', 'mode main']
+    6 = ['move-node-to-workspace 6', 'mode main']
+    7 = ['move-node-to-workspace 7', 'mode main']
+    8 = ['move-node-to-workspace 8', 'mode main']
+    9 = ['move-node-to-workspace 9', 'mode main']
+    0 = ['move-node-to-workspace 10', 'mode main']
+    a = ['move-node-to-workspace A', 'mode main']
+    b = ['move-node-to-workspace B', 'mode main']
+    c = ['move-node-to-workspace C', 'mode main']
+    d = ['move-node-to-workspace D', 'mode main']
+    e = ['move-node-to-workspace E', 'mode main']
+    g = ['move-node-to-workspace G', 'mode main']
+    i = ['move-node-to-workspace I', 'mode main']
+    m = ['move-node-to-workspace M', 'mode main']
+    n = ['move-node-to-workspace N', 'mode main']
+    o = ['move-node-to-workspace O', 'mode main']
+    p = ['move-node-to-workspace P', 'mode main']
+    q = ['move-node-to-workspace Q', 'mode main']
+    s = ['move-node-to-workspace S', 'mode main']
+    t = ['move-node-to-workspace T', 'mode main']
+    u = ['move-node-to-workspace U', 'mode main']
+    v = ['move-node-to-workspace V', 'mode main']
+    w = ['move-node-to-workspace W', 'mode main']
+    x = ['move-node-to-workspace X', 'mode main']
+    y = ['move-node-to-workspace Y', 'mode main']
+    z = ['move-node-to-workspace Z', 'mode main']

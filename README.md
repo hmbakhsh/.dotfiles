@@ -15,6 +15,8 @@ ln -s ~/.dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/.dotfiles/copyfile /opt/homebrew/bin/copyfile # dependency: brew install reattach-to-user-namespace
 brew bundle --file=~/.dotfiles/brew/Brewfile
 ~/.dotfiles/scripts/install-sketchybar.sh
+ln -s ~/.dotfiles/aerospace ~/.config/aerospace
+~/.dotfiles/aerospace/focus-sink/build.sh # Cmd-M helper app
 ```
 ---
 ### FAQ
