@@ -6,12 +6,26 @@ CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
 source "$CONFIG_DIR/icon_map.sh"
 source "$CONFIG_DIR/plugins/space_item.sh"
 
-windows="$($AEROSPACE list-windows --all --format '%{workspace}%{tab}%{app-name}')"
+# One workspace switch fires several events (AeroSpace's own trigger,
+# on-focus-changed, front_app_switched, space_windows_change). Let only the
+# last run of a burst do the work; the focus pill is already painted by
+# aerospace-focus.sh, so the short wait is not visible.
+token_file="${TMPDIR:-/tmp}/sketchybar-aerospace.token"
+token="$$.$RANDOM"
+echo "$token" > "$token_file"
+/bin/sleep 0.05
+[[ "$(<"$token_file")" == "$token" ]] || exit 0
 
-app_icon() {
-  __icon_map "$1"
-  APP_ICON="$icon_result"
-}
+# App icons per workspace in one pass, as icons_<workspace> variables
+# (workspace names are alphanumeric; bash 3.2 has no associative arrays).
+while IFS=$'\t' read -r ws app_name; do
+  [[ "$ws" =~ ^[A-Za-z0-9]+$ ]] || continue
+  seen_var="apps_$ws" icons_var="icons_$ws"
+  [[ "${!seen_var}" == *"|$app_name|"* ]] && continue
+  __icon_map "$app_name"
+  printf -v "$seen_var" '%s' "${!seen_var:-|}$app_name|"
+  printf -v "$icons_var" '%s' "${!icons_var:+${!icons_var} }$icon_result"
+done < <($AEROSPACE list-windows --all --format '%{workspace}%{tab}%{app-name}')
 
 # Items that exist now. Workspaces created after startup (e.g. 11) get an
 # item added below; a --set on a missing item would abort the whole batch.
@@ -40,17 +54,8 @@ while IFS='|' read -r workspace display visible focused; do
     continue
   fi
 
-  app_icons=""
-  seen_apps=" "
-
-  while IFS=$'\t' read -r window_workspace app_name; do
-    [[ "$window_workspace" == "$workspace" ]] || continue
-    [[ "$seen_apps" == *" $app_name "* ]] && continue
-
-    app_icon "$app_name"
-    app_icons="${app_icons:+$app_icons }$APP_ICON"
-    seen_apps="$seen_apps$app_name "
-  done <<< "$windows"
+  icons_var="icons_$workspace"
+  app_icons="${!icons_var}"
 
   drawing=off
   if [[ -n "$app_icons" ]] || [[ "$visible" == true ]]; then
@@ -86,7 +91,8 @@ done
 
 # New items land at the end of the left side; put every workspace item back
 # in AeroSpace's order (hidden leftovers last), ahead of the other left items.
-# --reorder only shuffles the slots of the items it is given, so list them all.
-args+=(--reorder "${order[@]}" aerospace_workspace_listener)
+# --reorder only shuffles the slots of the items it is given, so the other
+# left items must be listed too, or a workspace can land after them.
+args+=(--reorder "${order[@]}" aerospace_workspace_listener chevron front_app minimize_watcher)
 
 $SKETCHYBAR "${args[@]}"

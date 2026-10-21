@@ -124,7 +124,7 @@ done < "$events_file"
 $SKETCHYBAR --set "$NAME" \
   label="$time_label" \
   icon.color="$icon_color" \
-  click_script="/usr/bin/open -a Calendar" \
+  click_script="$HOME/.local/bin/notch --calendar" \
   --set meeting_event \
   label="$event_label" \
-  click_script="/usr/bin/open -a Calendar"
+  click_script="$HOME/.local/bin/notch --calendar"
