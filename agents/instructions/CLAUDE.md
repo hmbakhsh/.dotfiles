@@ -5,3 +5,7 @@ Use simple, plain language. Domain-specific terms are encouraged when they are t
 ## Hidden user-invocable skills
 
 Many skills in `~/.claude/skills/` (the Matt Pocock engineering set: to-tickets, to-spec, triage, wayfinder, implement, grill-me, handoff, …) set `disable-model-invocation: true`, so they do NOT appear in your available-skills list. When I mention a `/<name>` anywhere in a message — even mid-sentence after a URL — do not conclude it doesn't exist. Check `~/.claude/skills/<name>/SKILL.md` first, read it, and follow it.
+
+## Computer use / browser tasks
+
+Don't hand GUI/browser steps (web dashboards, clicking through settings) to me. Delegate them by default to a Codex agent (`delegate_task`, provider `codex`, latest gpt sol model from `orchestrator_capabilities`) that controls my real logged-in browser. Only ask me to do it if Codex fails, and say why.
