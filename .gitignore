@@ -4,3 +4,4 @@ __pycache__/
 *.backup-*
 agents/.backups/
 sketchybar/island/Island
+*.bak-*
