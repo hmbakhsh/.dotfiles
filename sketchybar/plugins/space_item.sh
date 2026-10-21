@@ -4,9 +4,11 @@
 # created later, e.g. 11).
 
 space_item_props() {
-  local sid="$1"
+  local sid="$1" label="$1"
+  # 11-20 are the second monitor's 1-10 (see ~/.config/aerospace/ws.sh).
+  [[ "$sid" =~ ^[0-9]+$ ]] && (( sid > 10 )) && label=$((sid - 10))
   SPACE_ITEM_PROPS=(
-    icon="$sid"
+    icon="$label"
     icon.font="JetBrains Mono:Bold:16.0"
     icon.padding_left=8
     icon.padding_right=8

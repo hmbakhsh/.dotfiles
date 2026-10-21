@@ -30,7 +30,15 @@ fi
 
 icon=$(/usr/bin/perl -CSD -e 'print chr(shift)' "$codepoint")
 
+# The glyph already shows the level; spell out the number only when it matters.
+if [[ "$charging" == false ]] && (( percentage <= 20 )); then
+  label_drawing=on
+else
+  label_drawing=off
+fi
+
 $SKETCHYBAR --set "$NAME" \
   icon="$icon" \
   icon.color="$color" \
-  label="${percentage}%"
+  label="${percentage}%" \
+  label.drawing="$label_drawing"

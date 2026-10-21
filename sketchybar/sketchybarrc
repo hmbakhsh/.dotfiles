@@ -133,6 +133,40 @@ sketchybar --add item clock right \
                   script="$PLUGIN_DIR/granola.sh" \
            --subscribe granola mouse.clicked system_woke front_app_switched
 
+# The island (island/Sources) grows out of the notch: the Spotify player, the
+# inbox, and messages from `notch`. It sets the bell's colour and count itself.
+pgrep -xq Island || nohup "$CONFIG_DIR/island/Island" >/dev/null 2>&1 &
+
+# Bell: orange with a count while T3 threads wait on you, white when there are
+# unseen messages, dim otherwise. Click for the inbox.
+sketchybar --add item notch_inbox right \
+           --set notch_inbox icon=󰂚 icon.color=0x66ffffff \
+                  icon.font="Hack Nerd Font:Bold:16.0" \
+                  label.drawing=off label.color=0xffffa94d \
+                  label.font="JetBrains Mono:Bold:14.0" label.padding_left=0 \
+                  click_script="$CONFIG_DIR/island/Island inbox"
+
+# Spotify, shown only while playing. Spotify posts a distributed notification
+# on every play/pause/track change, so no polling is needed. Right items render
+# in reverse insertion order, so this reads: title, artist, divider, bell.
+sketchybar --add event spotify_change com.spotify.client.PlaybackStateChanged \
+           --add item spotify_separator right \
+           --set spotify_separator drawing=off icon="│" icon.color=0x66ffffff \
+                  icon.font="Hack Nerd Font:Regular:16.0" label.drawing=off \
+                  padding_left=6 padding_right=6 \
+           --add item spotify_artist right \
+           --set spotify_artist drawing=off icon.drawing=off \
+                  label.color=0xff9ca3af padding_left=0 label.padding_left=6 \
+                  click_script="$CONFIG_DIR/island/Island spotify" \
+           --add item spotify right \
+           --set spotify drawing=off icon=":spotify:" \
+                  icon.font="sketchybar-app-font:Regular:16.0" \
+                  icon.color=0xff1db954 icon.padding_right=2 \
+                  padding_right=0 label.padding_right=4 \
+                  script="$PLUGIN_DIR/spotify.sh" \
+                  click_script="$CONFIG_DIR/island/Island spotify" \
+           --subscribe spotify spotify_change system_woke
+
 # Right-positioned items render in reverse insertion order.
 sketchybar --move control_center before clock
 
