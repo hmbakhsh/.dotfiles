@@ -171,8 +171,8 @@ outer.right = 0
     # Easy splits: Option+Shift+arrow sends the window to that half of the
     # screen. Floating or accordion windows are tiled first, and sizes are
     # evened out after, so two windows always land as clean halves.
-    alt-shift-left = ['layout tiling', 'layout tiles', 'move left', 'balance-sizes']
-    alt-shift-right = ['layout tiling', 'layout tiles', 'move right', 'balance-sizes']
+    alt-shift-left = ['exec-and-forget /Users/hbak/.config/aerospace/snap.sh left', 'move left']
+    alt-shift-right = ['exec-and-forget /Users/hbak/.config/aerospace/snap.sh right', 'move right']
     alt-shift-up = ['layout tiling', 'layout tiles', 'move up', 'balance-sizes']
     alt-shift-down = ['layout tiling', 'layout tiles', 'move down', 'balance-sizes']
     # Toggle the window filling the whole workspace.
