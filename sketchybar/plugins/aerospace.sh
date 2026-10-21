@@ -61,11 +61,11 @@ while IFS='|' read -r workspace display visible focused; do
   [[ -n "$app_icons" ]] && label_drawing=on
 
   if [[ "$focused" == true ]]; then
-    style=(background.drawing=on background.color=0x55ffffff icon.color=0xffffffff)
+    style=(background.drawing=on background.color=0x40ffffff icon.color=0xffffffff)
   elif [[ "$visible" == true ]]; then
-    style=(background.drawing=on background.color=0x22ffffff icon.color=0xffffffff)
+    style=(background.drawing=on background.color=0x1fffffff icon.color=0xffffffff)
   else
-    style=(background.drawing=off icon.color=0xff9ca3af)
+    style=(background.drawing=off icon.color=0x99ebebf5)
   fi
 
   args+=(--set "space.$workspace"

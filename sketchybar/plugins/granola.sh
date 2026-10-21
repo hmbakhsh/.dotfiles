@@ -22,7 +22,7 @@ recording=$(/usr/bin/osascript -l JavaScript -e '
 ' 2>/dev/null)
 
 if [[ "$recording" == "true" ]]; then
-  $SKETCHYBAR --set "$NAME" icon.color=0xffff6b6b label="REC" label.color=0xffff6b6b label.drawing=on
+  $SKETCHYBAR --set "$NAME" icon.color=0xffff453a label="REC" label.color=0xffff453a label.drawing=on
 else
-  $SKETCHYBAR --set "$NAME" icon.color=0xff9ca3af label.drawing=off
+  $SKETCHYBAR --set "$NAME" icon.color=0x99ebebf5 label.drawing=off
 fi

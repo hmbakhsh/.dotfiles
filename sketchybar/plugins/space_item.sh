@@ -9,17 +9,17 @@ space_item_props() {
   [[ "$sid" =~ ^[0-9]+$ ]] && (( sid > 10 )) && label=$((sid - 10))
   SPACE_ITEM_PROPS=(
     icon="$label"
-    icon.font="JetBrains Mono:Bold:16.0"
-    icon.padding_left=8
-    icon.padding_right=8
+    icon.font="SF Pro Rounded:Semibold:14.0"
+    icon.padding_left=9
+    icon.padding_right=9
     label.font="sketchybar-app-font:Regular:16.0"
-    label.color=0xffc5cece
+    label.color=0xd9ffffff
     label.padding_left=1
     label.padding_right=8
     label.drawing=off
-    background.color=0x55ffffff
-    background.corner_radius=6
-    background.height=26
+    background.color=0x40ffffff
+    background.corner_radius=8
+    background.height=24
     background.drawing=off
     click_script="/opt/homebrew/bin/aerospace workspace $sid"
   )

@@ -10,10 +10,10 @@ SKETCHYBAR=/opt/homebrew/bin/sketchybar
 [[ "$AEROSPACE_FOCUSED_WORKSPACE" == H ]] || $SKETCHYBAR --set "space.$AEROSPACE_FOCUSED_WORKSPACE" \
   drawing=on \
   background.drawing=on \
-  background.color=0x55ffffff \
+  background.color=0x40ffffff \
   icon.color=0xffffffff
 if [[ -n "$AEROSPACE_PREV_WORKSPACE" ]]; then
-  $SKETCHYBAR --set "space.$AEROSPACE_PREV_WORKSPACE" background.drawing=off icon.color=0xff9ca3af
+  $SKETCHYBAR --set "space.$AEROSPACE_PREV_WORKSPACE" background.drawing=off icon.color=0x99ebebf5
 fi
 
 $SKETCHYBAR --trigger aerospace_workspace_refresh >/dev/null 2>&1 &

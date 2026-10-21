@@ -15,7 +15,7 @@ sketchybar --load-font "$HOME/Library/Fonts/SketchyBarStatus6.ttf"
 # If you are looking for other colors, see the color picker:
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
-sketchybar --bar position=top height=40 topmost=window sticky=on blur_radius=0 color=0xff0d0d10
+sketchybar --bar position=top height=40 topmost=window sticky=on blur_radius=30 color=0xd9161618
 
 ##### Changing Defaults #####
 # We now change some default values, which are applied to all further items.
@@ -25,8 +25,8 @@ sketchybar --bar position=top height=40 topmost=window sticky=on blur_radius=0 c
 default=(
   padding_left=5
   padding_right=5
-  icon.font="Hack Nerd Font:Bold:17.0"
-  label.font="JetBrains Mono:Medium:14.0"
+  icon.font="SF Pro Text:Semibold:15.0"
+  label.font="SF Pro Text:Medium:13.0"
   icon.color=0xffffffff
   label.color=0xffffffff
   icon.padding_left=4
@@ -60,9 +60,9 @@ sketchybar --add item aerospace_workspace_listener left \
 # only the properties deviating from the current defaults need to be set
 
 sketchybar --add item chevron left \
-           --set chevron icon= label.drawing=off \
+           --set chevron icon=􀆊 icon.font="SF Pro Text:Semibold:11.0" icon.color=0x99ebebf5 label.drawing=off \
            --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+           --set front_app icon.drawing=off label.font="SF Pro Text:Bold:13.0" script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
 # Brings an AeroSpace-"minimised" window back when its app is activated from
@@ -83,7 +83,7 @@ sketchybar --add item minimize_watcher left \
 
 sketchybar --add item clock right \
            --set clock update_freq=10 padding_left=5 padding_right=5 icon.drawing=off \
-                    label.font="JetBrains Mono:Medium:14.0" \
+                    label.font="SF Pro Text:Medium:13.0" \
                    label.padding_left=2 label.padding_right=2 \
                    script="$PLUGIN_DIR/clock.sh" \
             --add item control_center right \
@@ -101,25 +101,25 @@ sketchybar --add item clock right \
                     icon.y_offset=-3 \
                     icon.padding_left=1 icon.padding_right=1 \
                     icon.background.drawing=off \
-                    label.font="JetBrains Mono:Medium:14.0" \
+                    label.font="SF Pro Text:Medium:13.0" \
                   label.width=36 label.align=right \
                   label.padding_left=0 label.padding_right=2 \
                  script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change \
            --add item status_separator right \
-           --set status_separator icon="│" icon.color=0x66ffffff \
+           --set status_separator icon="│" icon.color=0x33ffffff \
                   padding_left=0 padding_right=11 \
-                  icon.font="Hack Nerd Font:Regular:16.0" \
+                  icon.font="SF Pro Text:Light:15.0" \
                   icon.padding_left=4 icon.padding_right=4 \
                   label.drawing=off \
            --add item meeting_event right \
            --set meeting_event icon.drawing=off \
-                  label.font="JetBrains Mono:Medium:14.0" \
+                  label.font="SF Pro Text:Medium:13.0" \
                  label.padding_left=0 label.padding_right=4 \
                  click_script="/usr/bin/open -a Calendar" \
            --add item meeting right \
-            --set meeting update_freq=30 icon=󰃭 \
-                  label.font="JetBrains Mono:Bold:14.0" \
+            --set meeting update_freq=30 icon=􀉉 icon.font="SF Pro Text:Regular:14.0" \
+                  label.font="SF Pro Text:Semibold:13.0" \
                   label.padding_right=6 \
                  script="$PLUGIN_DIR/meeting.sh" \
                  click_script="/usr/bin/open -a Calendar" \
@@ -127,8 +127,8 @@ sketchybar --add item clock right \
            --add item granola right \
            --set granola update_freq=5 icon=":granola:" \
                   icon.font="sketchybar-app-font:Regular:16.0" \
-                  icon.color=0xff9ca3af \
-                  label.font="JetBrains Mono:Bold:14.0" \
+                  icon.color=0x99ebebf5 \
+                  label.font="SF Pro Text:Semibold:13.0" \
                   label.drawing=off \
                   script="$PLUGIN_DIR/granola.sh" \
            --subscribe granola mouse.clicked system_woke front_app_switched
@@ -140,10 +140,10 @@ pgrep -xq Island || nohup "$CONFIG_DIR/island/Island" >/dev/null 2>&1 &
 # Bell: orange with a count while T3 threads wait on you, white when there are
 # unseen messages, dim otherwise. Click for the inbox.
 sketchybar --add item notch_inbox right \
-           --set notch_inbox icon=󰂚 icon.color=0x66ffffff \
+           --set notch_inbox icon=󰂚 icon.color=0x33ffffff \
                   icon.font="Hack Nerd Font:Bold:16.0" \
                   label.drawing=off label.color=0xffffa94d \
-                  label.font="JetBrains Mono:Bold:14.0" label.padding_left=0 \
+                  label.font="SF Pro Text:Semibold:13.0" label.padding_left=0 \
                   click_script="$CONFIG_DIR/island/Island inbox"
 
 # Spotify, shown only while playing. Spotify posts a distributed notification
@@ -151,12 +151,12 @@ sketchybar --add item notch_inbox right \
 # in reverse insertion order, so this reads: title, artist, divider, bell.
 sketchybar --add event spotify_change com.spotify.client.PlaybackStateChanged \
            --add item spotify_separator right \
-           --set spotify_separator drawing=off icon="│" icon.color=0x66ffffff \
-                  icon.font="Hack Nerd Font:Regular:16.0" label.drawing=off \
+           --set spotify_separator drawing=off icon="│" icon.color=0x33ffffff \
+                  icon.font="SF Pro Text:Light:15.0" label.drawing=off \
                   padding_left=6 padding_right=6 \
            --add item spotify_artist right \
            --set spotify_artist drawing=off icon.drawing=off \
-                  label.color=0xff9ca3af padding_left=0 label.padding_left=6 \
+                  label.color=0x99ebebf5 padding_left=0 label.padding_left=6 \
                   click_script="$CONFIG_DIR/island/Island spotify" \
            --add item spotify right \
            --set spotify drawing=off icon=":spotify:" \

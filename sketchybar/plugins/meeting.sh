@@ -8,7 +8,7 @@ today=$(/bin/date +%Y-%m-%d)
 tomorrow=$(/bin/date -v+1d +%Y-%m-%d)
 time_label=""
 event_label="No upcoming meetings"
-icon_color=0xff9ca3af
+icon_color=0x99ebebf5
 events_file=$(/usr/bin/mktemp -t sketchybar-calendar)
 trap '/bin/rm -f "$events_file"' EXIT
 
@@ -35,7 +35,7 @@ if [[ "$calendar_ready" == false ]]; then
   $SKETCHYBAR --set "$NAME" label="" \
     --set meeting_event \
     label="Allow Calendar access" \
-    icon.color=0xffffc857 \
+    icon.color=0xffffd60a \
     click_script="/usr/bin/open 'x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars'"
   exit 0
 fi

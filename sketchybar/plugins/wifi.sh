@@ -6,7 +6,7 @@ device=$(/usr/sbin/networksetup -listallhardwareports | /usr/bin/awk '/Hardware 
 if [[ -n "$device" ]] && /usr/sbin/ipconfig getifaddr "$device" >/dev/null 2>&1; then
   color=0xffffffff
 else
-  color=0xff9ca3af
+  color=0x99ebebf5
 fi
 
 $SKETCHYBAR --set "$NAME" icon.color="$color"

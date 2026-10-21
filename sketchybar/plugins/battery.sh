@@ -16,13 +16,13 @@ level=$((percentage / 10 * 10))
 
 if [[ "$charging" == true ]]; then
   codepoint=$((0xE010 + level / 10))
-  color=0xffa6e3a1
+  color=0xff30d158
 else
   codepoint=$((0xE000 + level / 10))
   if (( percentage <= 20 )); then
-    color=0xffff6b6b
+    color=0xffff453a
   elif (( percentage <= 40 )); then
-    color=0xffffc857
+    color=0xffffd60a
   else
     color=0xffffffff
   fi
