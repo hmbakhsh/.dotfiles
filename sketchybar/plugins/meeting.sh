@@ -2,6 +2,14 @@
 
 ICALBUDDY=/opt/homebrew/bin/icalBuddy
 SKETCHYBAR=/opt/homebrew/bin/sketchybar
+# Comma-separated calendar names to show, e.g. "work@example.com,Home".
+# Put them in calendars.local (git-ignored); without it every calendar shows.
+calendars=$(/bin/cat "$CONFIG_DIR/calendars.local" 2>/dev/null)
+if [[ -x "$HOME/.local/bin/notch" ]]; then
+  click="$HOME/.local/bin/notch --calendar"
+else
+  click="/usr/bin/open -a Calendar"
+fi
 
 now=$(/bin/date +%s)
 today=$(/bin/date +%Y-%m-%d)
@@ -13,7 +21,7 @@ events_file=$(/usr/bin/mktemp -t sketchybar-calendar)
 trap '/bin/rm -f "$events_file"' EXIT
 
 "$ICALBUDDY" -ea -nc -npn -nrd \
-  -ic 'haroon@36labs.ai,h@hbak.co' \
+  ${calendars:+-ic "$calendars"} \
   -iep 'datetime,title' -po 'datetime,title' \
   -ps '| — |' -b '' -df '%Y-%m-%d' -tf '%H:%M' \
   eventsToday+1 > "$events_file" 2>/dev/null &
@@ -124,7 +132,7 @@ done < "$events_file"
 $SKETCHYBAR --set "$NAME" \
   label="$time_label" \
   icon.color="$icon_color" \
-  click_script="$HOME/.local/bin/notch --calendar" \
+  click_script="$click" \
   --set meeting_event \
   label="$event_label" \
-  click_script="$HOME/.local/bin/notch --calendar"
+  click_script="$click"

@@ -5,4 +5,4 @@ open -na Ghostty --args \
   --title=aerospace-switcher \
   --window-width=110 --window-height=22 \
   --confirm-close-surface=false \
-  -e /Users/hbak/.config/aerospace/switcher.sh
+  -e $HOME/.config/aerospace/switcher.sh

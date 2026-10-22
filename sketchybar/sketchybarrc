@@ -79,6 +79,14 @@ sketchybar --add item minimize_watcher left \
            --subscribe minimize_watcher front_app_switched
 
 ##### Adding Right Items #####
+# Calendar items open the notch island's calendar when it is installed,
+# otherwise Calendar.app.
+if [ -x "$HOME/.local/bin/notch" ]; then
+  CALENDAR_CLICK="$HOME/.local/bin/notch --calendar"
+else
+  CALENDAR_CLICK="/usr/bin/open -a Calendar"
+fi
+
 # In the same way as the left items we can add items to the right side.
 # Additional position (e.g. center) are available, see:
 # https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
@@ -122,15 +130,18 @@ sketchybar --add item clock right \
            --set meeting_event icon.drawing=off \
                   label.font="SF Pro Text:Medium:13.0" \
                  label.padding_left=0 label.padding_right=4 \
-                 click_script="$HOME/.local/bin/notch --calendar" \
+                 click_script="$CALENDAR_CLICK" \
            --add item meeting right \
             --set meeting update_freq=30 icon=􀉉 icon.font="SF Pro Text:Regular:14.0" \
                   label.font="SF Pro Text:Semibold:13.0" \
                   label.padding_right=6 \
                  script="$PLUGIN_DIR/meeting.sh" \
-                 click_script="$HOME/.local/bin/notch --calendar" \
-            --subscribe meeting system_woke \
-           --add item granola right \
+                 click_script="$CALENDAR_CLICK" \
+            --subscribe meeting system_woke
+
+# Optional extras: each only appears when its app is installed.
+if [ -d /Applications/Granola.app ]; then
+  sketchybar --add item granola right \
            --set granola update_freq=5 icon=":granola:" \
                   icon.font="sketchybar-app-font:Regular:16.0" \
                   icon.color=0x99ebebf5 \
@@ -138,16 +149,19 @@ sketchybar --add item clock right \
                   label.drawing=off \
                   script="$PLUGIN_DIR/granola.sh" \
            --subscribe granola mouse.clicked system_woke front_app_switched
+fi
 
 # Notch island: bell + Spotify items. Island itself runs as a login item
 # (~/Desktop/projects/notch-island, `make install`).
 ISLAND_DIR="$HOME/Desktop/projects/notch-island/integrations/sketchybar"
-ISLAND_SPOTIFY=0 \
-  source "$ISLAND_DIR/island.sh"
-# The bell is not wanted here; the island itself still shows the inbox.
-sketchybar --remove island_bell \
-           --set spotify_separator icon.color=0x33ffffff icon.font="SF Pro Text:Light:15.0" \
-           --set spotify_artist label.color=0x99ebebf5
+if [ -f "$ISLAND_DIR/island.sh" ]; then
+  ISLAND_SPOTIFY=0 \
+    source "$ISLAND_DIR/island.sh"
+  # The bell is not wanted here; the island itself still shows the inbox.
+  sketchybar --remove island_bell \
+             --set spotify_separator icon.color=0x33ffffff icon.font="SF Pro Text:Light:15.0" \
+             --set spotify_artist label.color=0x99ebebf5
+fi
 
 # Right-positioned items render in reverse insertion order.
 sketchybar --move control_center before clock

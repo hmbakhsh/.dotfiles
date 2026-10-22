@@ -1,0 +1,23 @@
+# Omakase macOS: the minimum to run the AeroSpace + SketchyBar + Zsh setup.
+# Installed by install.sh. Personal extras live in brew/Brewfile.
+tap "nikitabobko/tap"
+tap "felixkratz/formulae"
+
+# Window manager and menu bar
+cask "nikitabobko/tap/aerospace"
+brew "felixkratz/formulae/sketchybar"
+brew "ical-buddy"  # next-meeting item
+brew "fonttools"   # builds the bar's status icon font
+cask "font-sf-pro"
+
+# Workspace 1 = Ghostty, 2 = Helium (see aerospace.toml)
+cask "ghostty"
+cask "helium-browser"
+cask "raycast"
+
+# Shell
+brew "fzf"
+brew "zoxide"
+brew "lsd"
+brew "bat"
+brew "neovim"

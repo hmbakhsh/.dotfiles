@@ -4,7 +4,7 @@ config-version = 2
 
 after-startup-command = ['exec-and-forget /opt/homebrew/bin/sketchybar']
 
-start-at-login = false
+start-at-login = true
 
 
 # Keep SketchyBar's workspace indicator synchronized with AeroSpace.
@@ -12,11 +12,11 @@ start-at-login = false
 # activated from the Dock, Cmd-Tab or Raycast (see aerospace/minimize.sh).
 exec-on-workspace-change = [
     '/bin/bash', '-c',
-    '/Users/hbak/.config/aerospace/minimize.sh on-workspace-change; /Users/hbak/.config/sketchybar/plugins/aerospace-focus.sh; /Users/hbak/.config/aerospace/compact.sh &'
+    '~/.config/aerospace/minimize.sh on-workspace-change; ~/.config/sketchybar/plugins/aerospace-focus.sh; ~/.config/aerospace/compact.sh &'
 ]
 # Window opened, closed or moved without a workspace switch: refresh app icons
 # and close any gap in the workspace numbers (see compact.sh).
-on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh; /Users/hbak/.config/aerospace/compact.sh']
+on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh; ~/.config/aerospace/compact.sh']
 auto-reload-config = false
 
 enable-normalization-flatten-containers = true
@@ -106,7 +106,7 @@ run = 'layout floating'
 # for a moment before it leaves. See route-away-from-1-2.sh.
 [[on-window-detected]]
 if = 'test %{workspace} = 1 || test %{workspace} = 2'
-run = ['layout floating', 'exec-and-forget /Users/hbak/.config/aerospace/route-away-from-1-2.sh']
+run = ['layout floating', 'exec-and-forget ~/.config/aerospace/route-away-from-1-2.sh']
 
 # Other apps that float instead of taking a workspace (when opened on 1/2
 # they are routed away like any other app).
@@ -151,10 +151,10 @@ run = 'layout floating'
 inner.horizontal = 0
 inner.vertical = 0
 outer.bottom = 0
-# macOS reserves 25px on the Dell and 32px (the notch) on the built-in display;
-# add the rest so tiled windows begin exactly below SketchyBar's 40px bar
-# without overlap or a dead strip.
-outer.top = [{ monitor."DELL U2723QE" = 15 }, { monitor."built-in" = 8 }, 0]
+# macOS reserves 25px on external displays and 32px (the notch) on the
+# built-in one; add the rest so tiled windows begin exactly below
+# SketchyBar's 40px bar without overlap or a dead strip.
+outer.top = [{ monitor."built-in" = 8 }, 15]
 outer.left = 0
 outer.right = 0
 
@@ -177,13 +177,13 @@ outer.right = 0
     # Jump to the other monitor, even when its workspace is empty.
     ctrl-quote = 'focus-monitor --wrap-around next'
     # Send the window to a fresh workspace on the other monitor and follow it.
-    ctrl-shift-quote = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh other'
+    ctrl-shift-quote = 'exec-and-forget ~/.config/aerospace/ws.sh other'
 
     # Easy splits: Option+Shift+arrow sends the window to that half of the
     # screen. Floating or accordion windows are tiled first, and sizes are
     # evened out after, so two windows always land as clean halves.
-    alt-shift-left = ['exec-and-forget /Users/hbak/.config/aerospace/snap.sh left', 'move left']
-    alt-shift-right = ['exec-and-forget /Users/hbak/.config/aerospace/snap.sh right', 'move right']
+    alt-shift-left = ['exec-and-forget ~/.config/aerospace/snap.sh left', 'move left']
+    alt-shift-right = ['exec-and-forget ~/.config/aerospace/snap.sh right', 'move right']
     alt-shift-up = ['layout tiling', 'layout tiles', 'move up', 'balance-sizes']
     alt-shift-down = ['layout tiling', 'layout tiles', 'move down', 'balance-sizes']
     # Toggle the window filling the whole workspace.
@@ -192,16 +192,16 @@ outer.right = 0
     ctrl-minus = 'resize smart -50'
     ctrl-equal = 'resize smart +50'
 
-    ctrl-1 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 1'
-    ctrl-2 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 2'
-    ctrl-3 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 3'
-    ctrl-4 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 4'
-    ctrl-5 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 5'
-    ctrl-6 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 6'
-    ctrl-7 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 7'
-    ctrl-8 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 8'
-    ctrl-9 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 9'
-    ctrl-0 = 'exec-and-forget /Users/hbak/.config/aerospace/ws.sh focus 10'
+    ctrl-1 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 1'
+    ctrl-2 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 2'
+    ctrl-3 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 3'
+    ctrl-4 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 4'
+    ctrl-5 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 5'
+    ctrl-6 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 6'
+    ctrl-7 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 7'
+    ctrl-8 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 8'
+    ctrl-9 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 9'
+    ctrl-0 = 'exec-and-forget ~/.config/aerospace/ws.sh focus 10'
 
     # Cycle workspaces left/right (skips empty ones, wraps at the ends)
     ctrl-shift-h = 'workspace --wrap-around prev'
@@ -211,13 +211,13 @@ outer.right = 0
 
     # Instant minimise: park the window on hidden workspace H (no Dock
     # animation); Cmd-Shift-M brings the last one back. See minimize.sh.
-    cmd-m = 'exec-and-forget /Users/hbak/.config/aerospace/minimize.sh hide'
-    cmd-shift-m = 'exec-and-forget /Users/hbak/.config/aerospace/minimize.sh restore'
+    cmd-m = 'exec-and-forget ~/.config/aerospace/minimize.sh hide'
+    cmd-shift-m = 'exec-and-forget ~/.config/aerospace/minimize.sh restore'
 
     ctrl-semicolon = 'mode service'
 
     # Shortcut cheat sheet (~/.config/SHORTCUTS.txt), floating in TextEdit.
-    ctrl-shift-slash = 'exec-and-forget /usr/bin/open -a TextEdit /Users/hbak/.config/SHORTCUTS.txt'
+    ctrl-shift-slash = 'exec-and-forget /usr/bin/open -a TextEdit ~/.config/SHORTCUTS.txt'
 
 # Service mode — enter with Ctrl-Shift-; then press a bare key below.
 # Kept out of the global bindings so these rarer commands can't collide
@@ -237,16 +237,16 @@ outer.right = 0
     quote = ['move-node-to-monitor --wrap-around --focus-follows-window next', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']
     shift-quote = ['move-workspace-to-monitor --wrap-around next', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']
 
-    1 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 1', 'mode main']
-    2 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 2', 'mode main']
-    3 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 3', 'mode main']
-    4 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 4', 'mode main']
-    5 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 5', 'mode main']
-    6 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 6', 'mode main']
-    7 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 7', 'mode main']
-    8 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 8', 'mode main']
-    9 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 9', 'mode main']
-    0 = ['exec-and-forget /Users/hbak/.config/aerospace/ws.sh move 10', 'mode main']
+    1 = ['exec-and-forget ~/.config/aerospace/ws.sh move 1', 'mode main']
+    2 = ['exec-and-forget ~/.config/aerospace/ws.sh move 2', 'mode main']
+    3 = ['exec-and-forget ~/.config/aerospace/ws.sh move 3', 'mode main']
+    4 = ['exec-and-forget ~/.config/aerospace/ws.sh move 4', 'mode main']
+    5 = ['exec-and-forget ~/.config/aerospace/ws.sh move 5', 'mode main']
+    6 = ['exec-and-forget ~/.config/aerospace/ws.sh move 6', 'mode main']
+    7 = ['exec-and-forget ~/.config/aerospace/ws.sh move 7', 'mode main']
+    8 = ['exec-and-forget ~/.config/aerospace/ws.sh move 8', 'mode main']
+    9 = ['exec-and-forget ~/.config/aerospace/ws.sh move 9', 'mode main']
+    0 = ['exec-and-forget ~/.config/aerospace/ws.sh move 10', 'mode main']
     a = ['move-node-to-workspace A', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']
     b = ['move-node-to-workspace B', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']
     c = ['move-node-to-workspace C', 'exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh', 'mode main']

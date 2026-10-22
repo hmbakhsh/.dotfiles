@@ -1,0 +1,84 @@
+MY SHORTCUTS
+Open this file: ctrl-shift-/  (floating TextEdit, cmd-w to close)
+Lives at: ~/.config/SHORTCUTS.txt. Add new shortcuts here when you make them.
+
+======================================================================
+AEROSPACE (windows + workspaces)   ~/.config/aerospace/aerospace.toml
+======================================================================
+Each monitor has its own workspaces 1-10 (the second monitor is 11-20
+behind the scenes, but the bar shows 1-10).
+
+ctrl-1 .. ctrl-0        go to workspace 1-10 on this monitor
+ctrl-shift-h / l        prev / next workspace (all monitors)
+ctrl-tab                last workspace (back and forth)
+
+ctrl-h/j/k/l            focus window left/down/up/right (crosses monitors)
+ctrl-'                  focus other monitor
+ctrl-shift-'            send window to first empty workspace on other monitor
+
+alt-shift-arrow         snap window to that half of the screen
+alt-shift-f             fullscreen toggle
+ctrl-- / ctrl-=         shrink / grow window
+ctrl-/                  tiles layout (toggle horizontal/vertical)
+ctrl-,                  accordion layout (toggle horizontal/vertical)
+
+cmd-m                   minimise (instant, parks window on hidden ws H)
+cmd-shift-m             bring back last minimised window
+
+SERVICE MODE: ctrl-; then one key
+  1..0                  move window to workspace 1-10 on this monitor
+  a..z                  move window to letter workspace
+  '                     move window to other monitor (its visible workspace)
+  shift-'               move whole workspace to other monitor
+  h/j/k/l               move window left/down/up/right
+  f                     float / tile toggle
+  r                     reset layout (flatten)
+  backspace             close all other windows
+  esc                   reload aerospace config
+
+Reserved: workspace 1 = Ghostty, 2 = Helium. New windows opened there
+get bounced to a free workspace.
+
+======================================================================
+RAYCAST
+======================================================================
+cmd-space               Raycast
+(add your Raycast command hotkeys here)
+
+======================================================================
+TMUX   ~/.tmux.conf   prefix = ctrl-a
+======================================================================
+alt-1 .. alt-0          go to window 1-10
+alt-c                   new window
+alt-x                   kill window
+alt-s / prefix s        session/window picker
+alt-z                   zoom pane
+shift-arrow             focus pane
+prefix h/j/k/l          resize pane (repeatable)
+prefix % / "            split side by side / stacked
+alt-a / prefix C        Claude Code dashboard popup
+alt-j                   jump to next Claude pane waiting on input
+prefix u                Claude session picker
+prefix q                restart Claude in this pane
+prefix r                reload tmux config
+
+======================================================================
+HERDR   prefix = ctrl-a   full list: ~/.config/herdr/SHORTCUTS.md
+======================================================================
+prefix ?                live help (all bindings)
+alt-1 .. alt-9          switch workspace
+alt-c                   new workspace
+alt-s                   workspace picker
+alt-a                   toggle sidebar
+alt-z                   zoom pane
+alt-j                   jump to next waiting agent
+shift-arrow             focus pane
+prefix n / p            next / prev tab
+prefix c                new tab
+prefix v / -            split vertical / horizontal
+prefix x                close pane
+
+======================================================================
+APPS
+======================================================================
+T3 Code: cmd-e          show/hide right panel
