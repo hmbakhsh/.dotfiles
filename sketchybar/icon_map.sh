@@ -504,7 +504,7 @@ function __icon_map() {
    "FileZilla")
         icon_result=":filezilla:"
         ;;
-   "Final Cut Pro")
+   "Final Cut Pro" | "CapCut")
         icon_result=":final_cut_pro:"
         ;;
    "Finamp")
@@ -576,7 +576,7 @@ function __icon_map() {
    "FSNotes")
         icon_result=":fsnotes:"
         ;;
-   "Fusion")
+   "Fusion" | "Autodesk Fusion")
         icon_result=":fusion:"
         ;;
    "Games")
@@ -621,7 +621,7 @@ function __icon_map() {
    "Google Chat")
         icon_result=":google_chat:"
         ;;
-   "Chromium" | "Google Chrome" | "Google Chrome Canary")
+   "Chromium" | "Google Chrome" | "Google Chrome Canary" | "AdsPower Global")
         icon_result=":google_chrome:"
         ;;
    "Google Drive")
@@ -888,7 +888,7 @@ function __icon_map() {
    "MacPass")
         icon_result=":macpass:"
         ;;
-   "macshot" | "macshot.app" | "MacShot")
+   "macshot" | "macshot.app" | "MacShot" | "Shottr")
         icon_result=":macshot:"
         ;;
    "Mactracker")
@@ -1320,7 +1320,7 @@ function __icon_map() {
    "QGIS")
         icon_result=":qgis:"
         ;;
-   "QLMarkdown")
+   "QLMarkdown" | "Markdown Preview")
         icon_result=":qlmarkdown:"
         ;;
    "Qobuz")
@@ -1473,7 +1473,7 @@ function __icon_map() {
    "Siri")
         icon_result=":siri:"
         ;;
-   "Sketch")
+   "Sketch" | "Paper")
         icon_result=":sketch:"
         ;;
    "Skype")
@@ -1524,7 +1524,7 @@ function __icon_map() {
    "Stickies")
         icon_result=":stickies:"
         ;;
-   "Stocks")
+   "Stocks" | "Gloomberb")
         icon_result=":stocks:"
         ;;
    "Stremio")
@@ -1587,7 +1587,7 @@ function __icon_map() {
    "Telegram")
         icon_result=":telegram:"
         ;;
-   "Terminal" | "终端" | "ターミナル" | "Термінал" | "Терминал")
+   "Terminal" | "终端" | "ターミナル" | "Термінал" | "Терминал" | "Solo")
         icon_result=":terminal:"
         ;;
    "Termius")
@@ -1719,7 +1719,7 @@ function __icon_map() {
    "VMware Fusion")
         icon_result=":vmware_fusion:"
         ;;
-   "Voice Memos")
+   "Voice Memos" | "Hex Custom" | "Hex")
         icon_result=":voice_memos:"
         ;;
    "Vorta")

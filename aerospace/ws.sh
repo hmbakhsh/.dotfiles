@@ -40,7 +40,7 @@ if [[ "$($AEROSPACE list-monitors --focused --format '%{monitor-is-main}')" == f
 fi
 
 case "$1" in
-  focus) $AEROSPACE workspace "$n" ;;
+  focus) /Users/hbak/.config/aerospace/compact.sh switch "$n" ;;
   move)
     $AEROSPACE move-node-to-workspace "$n"
     /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh

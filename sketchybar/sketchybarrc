@@ -142,7 +142,7 @@ sketchybar --add item clock right \
 # Notch island: bell + Spotify items. Island itself runs as a login item
 # (~/Desktop/projects/notch-island, `make install`).
 ISLAND_DIR="$HOME/Desktop/projects/notch-island/integrations/sketchybar"
-SPOTIFY_ICON=":spotify:" SPOTIFY_ICON_FONT="sketchybar-app-font:Regular:16.0" \
+ISLAND_SPOTIFY=0 \
   source "$ISLAND_DIR/island.sh"
 # The bell is not wanted here; the island itself still shows the inbox.
 sketchybar --remove island_bell \

@@ -13,7 +13,15 @@ SKETCHYBAR=/opt/homebrew/bin/sketchybar
   background.color=0x40ffffff \
   icon.color=0xffffffff
 if [[ -n "$AEROSPACE_PREV_WORKSPACE" ]]; then
-  $SKETCHYBAR --set "space.$AEROSPACE_PREV_WORKSPACE" background.drawing=off icon.color=0x99ebebf5
+  # The workspace just left disappears at once if it's empty (no app icons)
+  # and not still showing on another monitor, instead of waiting for the
+  # debounced full refresh.
+  prev_drawing=on
+  if [[ "$($SKETCHYBAR --query "space.$AEROSPACE_PREV_WORKSPACE" 2>/dev/null)" == *'"label": {'*'"value": ""'* ]] &&
+     ! /opt/homebrew/bin/aerospace list-workspaces --monitor all --visible | /usr/bin/grep -qx "$AEROSPACE_PREV_WORKSPACE"; then
+    prev_drawing=off
+  fi
+  $SKETCHYBAR --set "space.$AEROSPACE_PREV_WORKSPACE" drawing="$prev_drawing" background.drawing=off icon.color=0x99ebebf5
 fi
 
 $SKETCHYBAR --trigger aerospace_workspace_refresh >/dev/null 2>&1 &

@@ -12,10 +12,11 @@ start-at-login = false
 # activated from the Dock, Cmd-Tab or Raycast (see aerospace/minimize.sh).
 exec-on-workspace-change = [
     '/bin/bash', '-c',
-    '/Users/hbak/.config/aerospace/minimize.sh on-workspace-change; /Users/hbak/.config/sketchybar/plugins/aerospace-focus.sh'
+    '/Users/hbak/.config/aerospace/minimize.sh on-workspace-change; /Users/hbak/.config/sketchybar/plugins/aerospace-focus.sh; /Users/hbak/.config/aerospace/compact.sh &'
 ]
-# Window opened, closed or moved without a workspace switch: refresh app icons.
-on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh']
+# Window opened, closed or moved without a workspace switch: refresh app icons
+# and close any gap in the workspace numbers (see compact.sh).
+on-focus-changed = ['exec-and-forget /opt/homebrew/bin/sketchybar --trigger aerospace_workspace_refresh; /Users/hbak/.config/aerospace/compact.sh']
 auto-reload-config = false
 
 enable-normalization-flatten-containers = true
@@ -74,15 +75,8 @@ run = 'layout floating'
 if.app-id = 'cc.ffitch.shottr'
 run = 'layout floating'
 
-# Workspaces 1 (Ghostty) and 2 (Helium) are reserved. Any other app that
-# would otherwise land there (i.e. it was opened while 1/2 was focused)
-# gets bounced to the earliest free workspace instead of tiling in
-# alongside Ghostty/Helium. See route-away-from-1-2.sh.
-[[on-window-detected]]
-if = 'test %{workspace} = 1 || test %{workspace} = 2'
-run = 'exec-and-forget /Users/hbak/.config/aerospace/route-away-from-1-2.sh'
-
-# Small utility/panel apps float instead of taking a workspace
+# Small utility/panel apps float over whatever is focused. Placed above the
+# route-away rule so they are never bounced to another workspace.
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
 run = 'layout floating'
@@ -99,6 +93,23 @@ run = 'layout floating'
 if.app-id = 'com.raycast.macos'
 run = 'layout floating'
 
+# Any app's settings window floats on the current workspace. Titles are
+# "X Settings"/"Preferences", or the name of the selected tab ("General").
+[[on-window-detected]]
+if.window-title-regex-substring = '(?i)(settings|preferences)|^(general|advanced|accounts|appearance|profiles|shortcuts|keyboard|privacy|notifications|extensions|updates|sync)$'
+run = 'layout floating'
+
+# Workspaces 1 (Ghostty) and 2 (Helium) are reserved. Any other app that
+# would otherwise land there (i.e. it was opened while 1/2 was focused)
+# gets bounced to the earliest free workspace instead of tiling in
+# alongside Ghostty/Helium. It floats first so Ghostty/Helium don't shrink
+# for a moment before it leaves. See route-away-from-1-2.sh.
+[[on-window-detected]]
+if = 'test %{workspace} = 1 || test %{workspace} = 2'
+run = ['layout floating', 'exec-and-forget /Users/hbak/.config/aerospace/route-away-from-1-2.sh']
+
+# Other apps that float instead of taking a workspace (when opened on 1/2
+# they are routed away like any other app).
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = 'layout floating'

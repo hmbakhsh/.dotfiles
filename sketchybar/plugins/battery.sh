@@ -19,9 +19,10 @@ if [[ "$charging" == true ]]; then
   color=0xff30d158
 else
   codepoint=$((0xE000 + level / 10))
+  # Yellow only for real Low Power Mode, as in the macOS battery icon.
   if (( percentage <= 20 )); then
     color=0xffff453a
-  elif (( percentage <= 40 )); then
+  elif /usr/bin/pmset -g | /usr/bin/grep -Eq '(lowpowermode|powermode)[[:space:]]+1'; then
     color=0xffffd60a
   else
     color=0xffffffff
@@ -30,15 +31,8 @@ fi
 
 icon=$(/usr/bin/perl -CSD -e 'print chr(shift)' "$codepoint")
 
-# The glyph already shows the level; spell out the number only when it matters.
-if [[ "$charging" == false ]] && (( percentage <= 20 )); then
-  label_drawing=on
-else
-  label_drawing=off
-fi
-
 $SKETCHYBAR --set "$NAME" \
   icon="$icon" \
   icon.color="$color" \
   label="${percentage}%" \
-  label.drawing="$label_drawing"
+  label.drawing=on

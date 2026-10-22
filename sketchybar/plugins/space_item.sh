@@ -21,6 +21,6 @@ space_item_props() {
     background.corner_radius=8
     background.height=24
     background.drawing=off
-    click_script="/opt/homebrew/bin/aerospace workspace $sid"
+    click_script="$HOME/.config/aerospace/compact.sh switch $sid"
   )
 }
