@@ -10,7 +10,7 @@ Everything shipped follows one contract, so any user on any old version reaches 
 
 ## The contract
 
-1. **Release = tag.** `./release.sh X.Y` tags `vX.Y`, CI builds the artifact and publishes it as the latest GitHub release, then the script bumps any package manager entry (Homebrew tap). One command; nothing is released by hand.
+1. **Release = tag.** `./release.sh X.Y` tags `vX.Y`, CI builds the artifact and publishes it as the latest GitHub release, then the script bumps any package manager entry (Homebrew tap). One command; nothing is released by hand. Before publishing, CI starts the built artifact exactly as shipped (signed, packaged) and checks it runs, e.g. `App.app/Contents/MacOS/App --version`; a local or debug build passing isn't enough.
 2. **Channel = latest release.** Installers and updaters fetch `releases/latest`, never `main`. Check for updates with a `HEAD` request to `https://github.com/OWNER/REPO/releases/latest` and read the version from the `/tag/vX.Y` redirect (not rate-limited, unlike the API). Compare numerically.
 3. **Install = update.** One idempotent install command. Re-running it is the manual update from any version. `VERSION=X.Y` installs a specific release (rollback).
 4. **Update the way it was installed.** Detect the install method (Homebrew Caskroom/Cellar, curl into a fixed path, git clone) and update through it, so the package manager's record never drifts.
