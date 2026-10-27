@@ -44,6 +44,14 @@ focus-follows-mouse.enabled = false
 
 key-mapping.preset = 'qwerty'
 
+# Agent browser window (opened by ~/.claude/bin/agent-browser with an
+# "agent-window" title page) parks on hidden workspace Z, so browser automation
+# never tiles into workspace 2 or pulls focus there.
+[[on-window-detected]]
+if.app-id = 'net.imput.helium'
+if.window-title-regex-substring = 'agent-window'
+run = 'move-node-to-workspace Z'
+
 # Only Helium is auto-assigned; everything else is manually placed.
 [[on-window-detected]]
 if.app-id = 'net.imput.helium'
