@@ -1,0 +1,5 @@
+#!/bin/sh
+# Wrapper for the 1Password CLI. op keeps its daemon's pid file in $TMPDIR but the socket in
+# ~/.config/op, so a caller with a different TMPDIR starts a second daemon that takes over the
+# socket; if that one hangs, every read hangs. Pinning TMPDIR keeps it to one daemon.
+TMPDIR=$(getconf DARWIN_USER_TEMP_DIR) exec /opt/homebrew/bin/op "$@"
